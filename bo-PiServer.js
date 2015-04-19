@@ -153,15 +153,17 @@ io.on('connection', function(socket) {
             sys.puts(stdout)
         }
         exec('sudo reboot now');
-        sockets.emit('Info', "Rebooting")
+        socket.emit('Info', "Rebooting")
     });
 
     socket.on('move', function(dX, dY) {
         //console.log('event: ', dX, dY);
         //Need a value -100, 100
-        piblaster.setPwm(17, (rescale(parseFloat(dX), -100, 100, 0.1, 0.3)));
-        piblaster.setPwm(4, (rescale(parseFloat(dY), -100, 100, 0.08, 0.19)));
-	
+	PWL = rescale(parseFloat(dY) - parseFloat(-dX), -100.000, 100, 0.140, 0.160);
+	PWR = rescale(parseFloat(-dY) + parseFloat(dX), -100.000, 100, 0.140, 0.160);
+        piblaster.setPwm(17, PWL);
+        piblaster.setPwm(4, PWR);
+	//console.log('Info', 'Rx' + PWR + ' Ly' + PWL);
     });
     
     socket.on('stopCam', function(dX, dY) {

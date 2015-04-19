@@ -52,9 +52,9 @@
         var dX = 0,
             dY = 0;
         var maxX = 100;
-        maxY = 100;
+        var maxY = 100;
         var prevX, prevY;
-        var gain = 0.025;
+        var gain = 1;//0.025;
         var joystick = new VirtualJoystick({
             container: document.getElementById('container'),
             mouseSupport: true,
@@ -64,8 +64,11 @@
 
         setInterval(function() {
             if (joystick.deltaX() != 0 || joystick.deltaY() != 0) {
-                dX = dX + gain * joystick.deltaX();
-                dY = dY + gain * joystick.deltaY();
+                //dX = dX + gain * joystick.deltaX();
+                //dY = dY + gain * joystick.deltaY();
+		
+		dX = gain * joystick.deltaX();
+                dY = gain * joystick.deltaY();
 
                 if (dX >= maxX) {
                     dX = maxX;
@@ -84,7 +87,7 @@
                 socket.emit('move', dX, dY);
             }
             var outputEl = document.getElementById('result');
-            outputEl.innerHTML = '<b>Result:</b> ' + ' dx:' + parseFloat(Math.round(dX * 100) / 100).toFixed(2) + ' dy:' + parseFloat(Math.round(dY * 100) / 100).toFixed(2) + (joystick.right() ? ' right' : '') + (joystick.up() ? ' up' : '') + (joystick.left() ? ' left' : '') + (joystick.down() ? ' down' : '')
+            outputEl.innerHTML = '<b>Result:</b> ' + ' dx:' + parseFloat(Math.round(dX * 100) / 100).toFixed(0) + ' dy:' + parseFloat(Math.round(dY * 100) / 100).toFixed(0) + (joystick.right() ? ' right' : '') + (joystick.up() ? ' up' : '') + (joystick.left() ? ' left' : '') + (joystick.down() ? ' down' : '')
         }, 1 / 30 * 1000);
 
 
