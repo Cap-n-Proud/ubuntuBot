@@ -1,4 +1,4 @@
-   <div class="off-canvas-wrap" data-offcanvas>
+<div class="off-canvas-wrap" data-offcanvas>
   <div class="inner-wrap">
     <nav class="tab-bar">
       <section class="left-small">
@@ -17,25 +17,93 @@
     <aside class="left-off-canvas-menu">
       <ul class="off-canvas-list">
         <li><label>Bo-Pi</label></li>
-        <li class="has-submenu"><a href="#">Settings</a>
-            <ul class="left-submenu">
-                <li class="back"><a href="#">Back</a></li>
-                <li><label>Level 1</label></li>
-                <li><a href="settings.html">Link 1</a></li>
-                <li class="has-submenu"><a href="#">Link 2 w/ submenu</a>
-                    <ul class="left-submenu">
-                        <li class="back"><a href="#">Back</a></li>
-                        <li><label>Level 2</label></li>
-                        <li><a href="#">...</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">...</a></li>
-            </ul>
-        </li>
-        <li><a href="#">The Encyclopedists</a></li>
-        <li><a href="#">The Mayors</a></li>
-        <li><a href="#">The Traders</a></li>
-        <li><a href="#">The Merchant Princes</a></li>
+        <!--<li class="has-submenu"><a href="#"><i class="fa fa-cog"></i> Settings</a>-->
+        <!--    <ul class="left-submenu">-->
+        <!--        <li class="back"><a href="#">Back</a></li>-->
+        <!--        <li><label>Level 1</label></li>-->
+        <!--        <li><a href="settings.html">Link 1</a></li>-->
+        <!--        <li class="has-submenu"><a href="#">Link 2 w/ submenu</a>-->
+        <!--            <ul class="left-submenu">-->
+        <!--                <li class="back"><a href="#">Back</a></li>-->
+        <!--                <li><label>Level 2</label></li>-->
+        <!--                <li><a href="#">...</a></li>-->
+        <!--            </ul>-->
+        <!--        </li>-->
+        <!--        <li><a href="#">...</a></li>-->
+        <!--    </ul>-->
+        <!--</li>-->
+        <li>
+	  <div class="row">
+	    <div class="small-2 large-4 columns">
+	         <i class="fa fa-refresh"></i>
+	    </div>
+            <div class="small-10 large-8 columns">
+                     <div style=" vertical-align:middle;">
+                      <input class="left inline" id="TLintervalVal" style="text-align:right; width:40px; margin-right:0rem;" type="text" placeholder="sec">
+                        <a href="#" class="button postfix inline round" style="margin-left:40px;width:20px" onclick="setTLInterval()"></a>
+                     </div>	     	     
+	    </div>
+	  </div>
+	   
+	  <div class="row">
+	      <div class="small-2 large-4 columns">
+		  <i class="fa fa-video-camera"></i> vf	  
+		      
+	      </div>
+	      <div class="small-10 large-8 columns">
+		  <div class="switch round small">
+		      <input id="vf" type="checkbox" name="vfT">
+			  <label for="vf"></label>
+		      </div>
+		  </div>
+	  </div>
+	 <br>
+	  <div class="row">
+	      <div class="small-2 large-4 columns">
+		  <i class="fa fa-video-camera"></i> hf	  
+		      
+	      </div>
+	      <div class="small-10 large-8 columns">
+		  <div class="switch round small">
+		      <input id="hf" type="checkbox" name="hfT">
+			  <label for="hf">hf</label>
+		      </div>
+		  </div>
+	  </div>
+      
+	     
+	     
+	     
+	     
+	</li>
+
+
+
+
+
+        <li>
+	  	  <div class="row">
+	      <div class="small-2 large-4 columns">
+		  <i class="fa fa-video-camera"></i> hf	  
+		      
+	      </div>
+	      <div class="small-10 large-8 columns">
+	 <button data-dropdown="drop" aria-controls="drop" aria-expanded="false" class="small alert round button dropdown">Dropdown Button</button><br>
+<ul id="drop" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
+  <li><a href="#">This is a link</a></li>
+  <li><a href="#">This is another</a></li>
+  <li><a href="#">Yet another</a></li>
+</ul>
+		
+	  </div>
+	</li>
+
+
+        <li>
+	
+	
+	</li>
+        
       </ul>
     </aside>
 
@@ -64,3 +132,4 @@
 
     <section class="main-section">
       <!-- content goes here -->
+  

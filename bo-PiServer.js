@@ -79,7 +79,7 @@ Object.keys(ifaces).forEach(function (ifname) {
     }
   });
 });
-//--------------------
+//---------------
 
 
 app.use(express.static(__dirname + '/public'));
@@ -92,6 +92,11 @@ app.use(express.static(__dirname + '/public'));
 
     app.get('/vj', function(req, res) {
         res.sendFile(__dirname + '/public/robotj.html');
+        res.end;
+    });
+    
+    app.get('/test', function(req, res) {
+        res.sendFile(__dirname + '/public/test.html');
         res.end;
     });
 
@@ -244,6 +249,15 @@ io.on('connection', function(socket) {
     
     });
 
+    socket.on('shutDown', function() {
+      socket.emit('Info', 'Shutting down robot');
+      function puts(error, stdout, stderr) {
+            sys.puts(stdout)
+        }
+        exec('sudo shutdown now');
+    });
+
+  
 });
 
 
