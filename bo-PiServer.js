@@ -1,7 +1,7 @@
 var nconf = require('/usr/local/lib/node_modules/nconf');
 nconf.argv()
        .env()
-       .file({ file: './config.json' });
+       .file({ file: '/home/pi/bo-Pi/config.json' });
 
 var express = require('/usr/local/lib/node_modules/express');
 var app = express();

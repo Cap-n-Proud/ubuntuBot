@@ -22,7 +22,7 @@
 case "$1" in
   start)
     su root -c 'sudo node /home/pi/bo-Pi/bo-PiServer.js'
-    echo "Starting TL server"
+    echo "Starting bo-Pi server"
     # Print the IP address
     _IP=$(hostname -I) || true
     if [ "$_IP" ]; then
