@@ -1,28 +1,7 @@
-// sudo udevadm control --reload-rules
-// to refresh the port allocation
-var events = require('events');
-var eventEmitter = new events.EventEmitter();
-//var TLFolder = "/home/pi/Documents/TL/";
-var SNFolder = "/home/pi/Documents/bo-Pi/";
-var InstallPath = "/home/pi/bo-Pi/";
-
-var serPort = "/dev/ttyACM0";
-var serBaud = 38400;
-var serverPort = 999;
-var MJPGPort = 9000;
-
-var LogR = 0;
-var TelemetryFN = "";
-var prevTel = "";
-var prevPitch = "";
-
-var SEPARATOR = ","
-var version = "0.1";
-
-var ArduHeader;
-var ArduRead = {};
-
-//--------------------------------------
+var nconf = require('/usr/local/lib/node_modules/nconf');
+nconf.argv()
+       .env()
+       .file({ file: './config.json' });
 
 var express = require('/usr/local/lib/node_modules/express');
 var app = express();
@@ -30,31 +9,32 @@ var http = require('http').Server(app);
 var io = require('/usr/local/lib/node_modules/socket.io')(http);
 var fs = require('/usr/local/lib/node_modules/safefs');
 var piblaster = require('/usr/local/lib/node_modules/pi-blaster.js');
-
-//var PiFastGpio = require('/usr/local/lib/node_modules/pi-fast-gpio//index.js');
-
-var SERVO_1_GPIO = 4;
-var SERVO_2_GPIO = 17;
-var HOST = '127.0.0.1';
-var serverADDR = 'N/A';
-//var PORT = 8888;
-
-//var pw = 2000; // pulsewidth in microseconds
-//var change = 20;
-
-//var gpio = new PiFastGpio();
-
 var sys = require('sys');
 var exec = require('child_process').exec;
 
-var TLimgWidth = 2592; // Max = 2592
-var TLimgHeight = 1944; //# Max = 1944
+var SNFolder = nconf.get('server:SNFolder');
+var InstallPath = nconf.get('server:InstallPath');
 
-var SNimgWidth = 320; // Max = 2592
-var SNimgHeight = 240; //# Max = 1944
+var serverPort = nconf.get('server:port');
+var MJPGPort = nconf.get('MJPG:MJPGPort');
+var version = nconf.get('server:version');
 
+var SERVO_1_GPIO = nconf.get('hardware:SERVO_1_GPIO');
+var SERVO_2_GPIO = nconf.get('hardware:SERVO_2_GPIO');
+var SERVO_1_MIN =  nconf.get('hardware:SERVO_1_MIN');
+var SERVO_1_MAX =  nconf.get('hardware:SERVO_1_MAX');
+var SERVO_2_MIN =  nconf.get('hardware:SERVO_2_MIN');
+var SERVO_2_MAX =  nconf.get('hardware:SERVO_2_MAX');
 
-var TLInterval = 10000;
+var serverADDR = 'N/A';
+
+var TLimgWidth = nconf.get('camera:TLimgWidth');
+var TLimgHeight = nconf.get('camera:TLimgHeight');
+
+var SNimgWidth = nconf.get('camera:SNimgWidth');
+var SNimgHeight = nconf.get('camera:SNimgHeight');
+
+var TLInterval = nconf.get('camera:TLInterval');
 
 //Get IP address http://stackoverflow.com/questions/3653065/get-local-ip-address-in-node-js
 
@@ -113,7 +93,6 @@ app.use(express.static(__dirname + '/public'));
         res.end;
     });
 
-
 }
 
 // Logging middleware if needed
@@ -134,8 +113,7 @@ io.on('connection', function(socket) {
     socket.emit('connected', 'Connected ' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds()+ ' v' + version + ' @' + serverADDR);
     socket.emit('serverADDR', serverADDR);
     console.log('New socket.io connection - id: %s', socket.id);
-    //socket.emit('serverADDR', require('os').networkInterfaces().eth0[0].address);
-
+  
     function puts(error, stdout, stderr) {
         sys.puts(stdout)
     }
@@ -163,18 +141,17 @@ io.on('connection', function(socket) {
     });
 
     socket.on('move', function(dX, dY) {
-        //console.log('event: ', dX, dY);
         //Need a value -100, 100
-	PWL = rescale(parseFloat(dY) - parseFloat(-dX), -100.000, 100, 0.140, 0.160);
-	PWR = rescale(parseFloat(-dY) + parseFloat(dX), -100.000, 100, 0.140, 0.160);
-        piblaster.setPwm(17, PWL);
-        piblaster.setPwm(4, PWR);
-	//console.log('Info', 'Rx' + PWR + ' Ly' + PWL);
-    });
+	PWL = rescale(parseFloat(dY) - parseFloat(-dX), -100.000, 100, parseFloat(SERVO_1_MIN), parseFloat(SERVO_1_MAX));
+	PWR = rescale(parseFloat(-dY) + parseFloat(dX), -100.000, 100, parseFloat(SERVO_2_MIN), parseFloat(SERVO_2_MAX));
+     
+	piblaster.setPwm(SERVO_2_GPIO, PWL);
+        piblaster.setPwm(SERVO_1_GPIO, PWR);
+   });
     
     socket.on('stopCam', function(dX, dY) {
-        piblaster.setPwm(17, 0);
-        piblaster.setPwm(4, 0);      
+        piblaster.setPwm(SERVO_2_GPIO, 0);
+        piblaster.setPwm(SERVO_1_GPIO, 0);      
     });
 
     socket.on('TLInterval', function(T) {
@@ -194,18 +171,24 @@ io.on('connection', function(socket) {
       return MyDateString + '_' + MyTimeStamp      
     }
     
+    function snapShotTL(imgWidth, imgHeight, folderName, fileName) {
+       
+      function puts(error, stdout, stderr) {
+            sys.puts(stdout)
+        }
+        exec('sudo raspistill -w ' + imgWidth + ' -h ' + imgHeight + ' -o ' + folderName + '/' + fileName + '.jpg  -sh 40 -awb auto -mm average -v');
+        socket.emit('Info', fileName + '.jpg');
+	socket.emit('Folder', folderName);
+      
+    }
     
     function snapShot(imgWidth, imgHeight, folderName, fileName) {
        
       function puts(error, stdout, stderr) {
             sys.puts(stdout)
         }
-        //exec('sudo raspistill -w ' + imgWidth + ' -h ' + imgHeight + ' -o ' + folderName + '/' + fileName + '.jpg  -sh 40 -awb auto -mm average -v');
-        //console.log('sudo raspistill -w ' + imgWidth + ' -h ' + imgHeight + ' -o ' + TLfolderName + '/' + TLfileName + '_' + MyTimeStamp +  '.jpg  -sh 40 -awb auto -mm average -v');
-        
-        exec('sudo wget -O ' + folderName + fileName + '.jpg http://' + serverADDR + ':' + MJPGPort + '/?action=snapshot');
-        //console.log('wget -O ' + folderName + fileName + '.jpg http://' + serverADDR + ':' + MJPGPort + '/?action=snapshot');
-	socket.emit('Info', fileName + '.jpg');
+      exec('sudo wget -O ' + folderName + fileName + '.jpg http://' + serverADDR + ':' + MJPGPort + '/?action=snapshot');
+    	socket.emit('Info', fileName + '.jpg');
 	socket.emit('Folder', folderName);
 
     }
@@ -236,7 +219,7 @@ io.on('connection', function(socket) {
         socket.emit('Folder', TLfolderName);
         //console.log(TLfolderName);
         myVar = setInterval(function() {
-            snapShot(TLimgWidth, TLimgHeight, TLfolderName, TLfileName)
+            snapShotTL(TLimgWidth, TLimgHeight, TLfolderName, TLfileName)
         }, TLInterval);
 	socket.emit('Info', 'Time-lapse started');
 
@@ -254,7 +237,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('shutDown', function() {
-      socket.emit('Info', 'Shutting down robot');
+      socket.emit('Info', 'Shutting down...');
       function puts(error, stdout, stderr) {
             sys.puts(stdout)
         }
@@ -266,7 +249,5 @@ io.on('connection', function(socket) {
 
 
 http.listen(serverPort, function() {
-    console.log('listening on *: ', serverPort); //
-
-
+ console.log( nconf.get('server:name') + ' listening on *: ', serverPort); //
 });
