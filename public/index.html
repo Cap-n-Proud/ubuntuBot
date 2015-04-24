@@ -1,25 +1,165 @@
 <!DOCTYPE html>
-<html class="js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" lang="en">
+<html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CamServer | Welcome</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Bo-Pi | Welcome</title>
     <link rel="stylesheet" href="foundation/css/foundation.css">
     <script src="foundation/js/vendor/modernizr.js"></script>
-    <script src="foundation/js/foundation.min.js"></script>
-    <script src="foundation/js/foundation.slider.js"></script>
     <script type="text/javascript" src="/js/socket.io.js"></script>
-    <script src="jquery/lib/jquery-1.7.1.js"></script>
-    <script src="jquery/src/rangeinput/rangeinput.js"></script>
     <link rel="stylesheet" href="css/custom.css">
     <link rel="text/html" href="favicon.html">
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
-  
 </head>
 
 <body>
+   <div class="off-canvas-wrap" data-offcanvas>
+  <div class="inner-wrap">
+    <nav class="tab-bar">
+      <section class="left-small">
+        <a class="left-off-canvas-toggle menu-icon" ><span></span></a>
+      </section>
 
+      <section class="middle tab-bar-section">
+        <h1 class="title">Bo-Pi</h1>
+      </section>
+
+      <section class="right-small">
+        <a class="right-off-canvas-toggle menu-icon" ><span></span></a>
+      </section>
+    </nav>
+
+    <aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        <li><label>Settings</label></li>
+        <!--<li class="has-submenu"><a href="#">Settings</a>
+            <ul class="left-submenu">
+                <li class="back"><a href="#">Back</a></li>
+                <li><label>Level 1</label></li>
+                <li><a href="settings.html">Link 1</a></li>
+                <li class="has-submenu"><a href="#">Link 2 w/ submenu</a>
+                    <ul class="left-submenu">
+                        <li class="back"><a href="#">Back</a></li>
+                        <li><label>Level 2</label></li>
+                        <li><a href="#">...</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">...</a></li>
+            </ul>
+        </li>
+        <li><a href="#">The Encyclopedists</a></li>
+        <li><a href="#">The Mayors</a></li>
+        <li><a href="#">The Traders</a></li>
+        <li><a href="#">The Merchant Princes</a></li>
+        -->
+        
+        <li>
+	  <div class="row">
+	    <div class="small-2 large-4 columns">
+	         <i class="fa fa-refresh"></i>
+	    </div>
+            <div class="small-10 large-8 columns">
+                     <div style=" vertical-align:middle;">
+                      <input class="left inline" id="TLintervalVal" style="text-align:right; width:40px; margin-right:0rem;" type="text" placeholder="sec">
+                        <a href="#" class="button postfix inline round" style="margin-left:40px;width:20px" onclick="setTLInterval()"></a>
+                     </div>	     	     
+	    </div>
+	  </div>
+	   
+	  <div class="row">
+	      <div class="small-2 large-4 columns">
+		  <i class="fa fa-video-camera"></i> vf	  
+		      
+	      </div>
+	      <div class="small-10 large-8 columns">
+		  <div class="switch round small">
+		      <input id="vf" type="checkbox" name="vfT">
+			  <label for="vf"></label>
+		      </div>
+		  </div>
+	  </div>
+	 <br>
+	  <div class="row">
+	      <div class="small-2 large-4 columns">
+		  <i class="fa fa-video-camera"></i> hf	  
+		      
+	      </div>
+	      <div class="small-10 large-8 columns">
+		  <div class="switch round small">
+		      <input id="hf" type="checkbox" name="hfT">
+			  <label for="hf"></label>
+		      </div>
+		  </div>
+	  </div>
+	  <div class="row">
+	   
+	      <div class="small-12 columns">
+	    <a href="#" onclick="shutdown()" class="alert button round" style="color:red;"> <i class="fa fa-power-off"></i></a>
+	      </div>
+	  </div>
+	  <button id="goFS">Go fullscreen<button>
+<script>
+   var goFS = document.getElementById("goFS");
+   goFS.addEventListener("click", function() {
+      document.body.requestFullscreen();
+   }, false);
+</script>
+
+      
+	     
+	     
+	     
+	</li>
+      </ul>
+    </aside>
+
+    <aside class="right-off-canvas-menu">
+      <ul class="off-canvas-list">
+        <li><label>Users</label></li>
+        <li><a href="#">Hari Seldon</a></li>
+        <li class="has-submenu"><a href="#">R. Giskard Reventlov</a>
+            <ul class="right-submenu">
+                <li class="back"><a href="#">Back</a></li>
+                <li><label>Level 1</label></li>
+                
+                <li>
+                
+                </li>
+                <li class="has-submenu"><a href="#">Link 2 w/ submenu</a>
+                    <ul class="right-submenu">
+                        <li class="back"><a href="#">Back</a></li>
+                        <li><label>Level 2</label></li>
+                        <li><a href="#">...</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">...</a></li>
+            </ul>
+        </li>
+        <li>
+                <div class="row" style="float:center; vertical-align:middle;" >
+                    <div class="small-6 columns">
+                      
+                      <a href="#" onclick="takeSnapshot()" class="button round"> <i class="fa fa-picture-o  fa-2x"></i></a>
+
+
+                    </div>
+                               <div class="small-3 columns">
+                    &nbsp;
+                    </div>
+                    
+                    <div class="small-3 columns">
+                    &nbsp;
+                    </div>
+                    
+               </div>          
+               </li>
+      </ul>
+    </aside>
+
+    <section class="main-section">
+      <!-- content goes here -->
    <div class="row">
     <!--
         <div class="large-3 columns">
@@ -55,11 +195,12 @@
         
         <div class="large-4 columns">
             <iframe id="camControl" src="default.html" width="280" height="280" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+            <a href="#" class="button tiny round" style="bottom: +20px;" onclick="takeSnapshot()"><i class="fa fa-picture-o fa-2x"></i></a>
         </div>
         
         <div class="large-4 columns">
                <!-- Begin of commands -->
-               <div class="row">
+              <!-- <div class="row">
                     <div class="small-6 columns">
                     
                     <h5 class="left">
@@ -78,10 +219,10 @@
                     &nbsp;
                     </div>
                </div>
+              -->  
                 
-                
-               <div class="row">
-                    <div class="small-6 columns">
+               <!--   <div class="row">
+                 <div class="small-6 columns">
                      <h5 class="left">
                         <i class="fa fa-refresh fa-2x"></i>
                     </h5>
@@ -98,16 +239,13 @@
                     <div class="small-3 columns">
                     &nbsp;
                     </div>
-               </div>
+               </div> -->
                     
                 
                <div class="row">
                     <div class="small-6 columns">
                       <i class="fa fa-video-camera  fa-2x"></i>
                       <div class="switch round small right"><input id="Video" type="checkbox" onclick="VideoF(this)"><label for="Video"></label></div>
-                      
-         
-
                     </div>
                     
                     <div class="small-3 columns">
@@ -118,22 +256,7 @@
                     &nbsp;
                     </div>
                </div>  
-               <div class="row" style="float:center; vertical-align:middle;" >
-                    <div class="small-6 columns">
-                      
-                      <a href="#" onclick="takeSnapshot()" class="button round"> <i class="fa fa-picture-o  fa-2x"></i></a>
-
-
-                    </div>
-                               <div class="small-3 columns">
-                    &nbsp;
-                    </div>
-                    
-                    <div class="small-3 columns">
-                    &nbsp;
-                    </div>
-                    
-               </div>          
+               
                <!-- End of commands -->      
         </div>
          
@@ -160,33 +283,14 @@
             </div>
          </div>
        
-      <!--
-      <object name="footer" type="text/html" data="footer.html"></object>
-      This does not apply stiles...
-      
+ 
+     </section>
 
-<footer class="row">
-        <div class="large-12 columns">
-          <hr/>
-          <div class="row">
-            <div class="large-6 columns">
-              <p>© Copyright no one at all. Go to town.</p>
-            </div>
-            <div class="large-6 columns">
-              <ul class="inline-list right">
-                <li><a href="#">Link 1</a></li>
-                <li><a href="#">Link 2</a></li>
-                <li><a href="#">Link 3</a></li>
-                <li><a href="#">Link 4</a></li>
-              </ul>
-            </div>
-          </div>
-        </div> 
-</footer>
-      
-      --->
-    
-    
+  <a class="exit-off-canvas"></a>
+
+  </div>
+</div>
+       
     
     
     
@@ -235,6 +339,10 @@
 	  socket.emit('takeSnapShot');	
 	}
 	
+	function shutdown(element) {
+	  socket.emit('shutDown');	
+	}
+	
 	function TLStart(element) {
 
 	    if (element.checked == true) {
@@ -276,6 +384,31 @@
 	}); 
     </script>
 
+    
+    <script src="./foundation/js/vendor/jquery.js"></script>
+    <script src="./foundation/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+    <script>
+    
+ function hideAddressBar()
+{
+  if(!window.location.hash)
+  {
+      if(document.height < window.outerHeight)
+      {
+          document.body.style.height = (window.outerHeight + 50) + 'px';
+      }
+
+      setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
+  }
+}
+
+window.addEventListener("load", function(){ if(!window.pageYOffset){ hideAddressBar(); } } );
+window.addEventListener("orientationchange", hideAddressBar );
+</script>
+    
 </body>
 
 </html>
