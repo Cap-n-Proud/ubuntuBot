@@ -9,6 +9,7 @@ var InstallPath = "/home/pi/bo-Pi/";
 var serPort = "/dev/ttyACM0";
 var serBaud = 38400;
 var serverPort = 999;
+var MJPGPort = 9000;
 
 var LogR = 0;
 var TelemetryFN = "";
@@ -199,10 +200,13 @@ io.on('connection', function(socket) {
       function puts(error, stdout, stderr) {
             sys.puts(stdout)
         }
-        exec('sudo raspistill -w ' + imgWidth + ' -h ' + imgHeight + ' -o ' + folderName + '/' + fileName + '.jpg  -sh 40 -awb auto -mm average -v');
+        //exec('sudo raspistill -w ' + imgWidth + ' -h ' + imgHeight + ' -o ' + folderName + '/' + fileName + '.jpg  -sh 40 -awb auto -mm average -v');
         //console.log('sudo raspistill -w ' + imgWidth + ' -h ' + imgHeight + ' -o ' + TLfolderName + '/' + TLfileName + '_' + MyTimeStamp +  '.jpg  -sh 40 -awb auto -mm average -v');
-        socket.emit('Info', fileName + '.jpg');
-	  socket.emit('Folder', folderName);
+        
+        exec('sudo wget -O ' + folderName + fileName + '.jpg http://' + serverADDR + ':' + MJPGPort + '/?action=snapshot');
+        //console.log('wget -O ' + folderName + fileName + '.jpg http://' + serverADDR + ':' + MJPGPort + '/?action=snapshot');
+	socket.emit('Info', fileName + '.jpg');
+	socket.emit('Folder', folderName);
 
     }
 
