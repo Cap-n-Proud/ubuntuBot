@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>CamServer | Welcome</title>
     <link rel="stylesheet" href="foundation/css/foundation.css">
     <script src="foundation/js/vendor/modernizr.js"></script>
@@ -13,8 +14,7 @@
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
   
     <script>
-    $('body').scrollTop(1);
-    
+   	window.scrollTo(0,1);    
     </script>
 </head>
 
@@ -102,7 +102,14 @@
 	
 	      </div>
 	  </div>
-	  
+	  <button id="goFS">Go fullscreen<button>
+<script>
+   var goFS = document.getElementById("goFS");
+   goFS.addEventListener("click", function() {
+      document.body.requestFullscreen();
+   }, false);
+</script>
+
       
 	     
 	     
