@@ -11,7 +11,7 @@
     "nodeLib": "/usr/local/lib/node_modules/",
     "SNFolder": "/home/pi/Documents/bo-Pi/",
     "InstallPath": "/home/pi/bo-Pi/",
-    "debugLevel": "5"
+    "debugLevel": "1"
   },
   "hardware":{
     "SERVO_1_GPIO": 4,
@@ -19,7 +19,10 @@
     "SERVO_1_MIN": "0.140",
     "SERVO_1_MAX": "0.160",
     "SERVO_2_MIN": "0.140",
-    "SERVO_2_MAX": "0.160"    
+    "SERVO_2_MAX": "0.160",
+    "LED1_R": "27",
+    "LED1_G": "18",
+    "LED1_B": "25"    
   },
   "camera": {
     "TLimgWidth": 2592,

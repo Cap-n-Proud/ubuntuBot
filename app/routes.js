@@ -21,7 +21,12 @@ var path = require('path');
             res.sendFile(path.resolve(__dirname + '/../wwwroot/test.html'));
             res.end;
         });
-
+        
+       app.get('/cpicker', function(req, res) {
+            res.sendFile(path.resolve(__dirname + '/../wwwroot/cpicker.html'));
+            res.end;
+        });
+       
         app.get('/REBOOT', function(req, res) {
             var postData = req.url;
 

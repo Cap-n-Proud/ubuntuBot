@@ -1,0 +1,49 @@
+<html lang="en">  
+<head>
+ <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Bo-Pi | Welcome</title>
+       <script src="foundation/js/vendor/modernizr.js"></script>
+   
+    <link rel="stylesheet" href="foundation/css/foundation.css">
+   <script type="text/javascript" src="js/socket.io.js"></script>
+    
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="text/html" href="favicon.html">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link rel="manifest" href="manifest.json">
+    <script type="text/javascript" src="js/jscolor/jscolor.js"></script>
+
+  <meta charset="utf-8" />  
+  <title>HTML5 Color Picker Demonstrated</title>  
+  <script language="javascript">  
+   var socket = io();
+   
+   
+   
+  function updateLED(color)  
+  {  
+    
+     document.getElementById("R").style.color = color;  
+    socket.emit('RGBLED', color.rgb[0], color.rgb[1], color.rgb[2]);
+  
+       document.getElementById('R').innerHTML = color.rgb[0];
+	document.getElementById('G').innerHTML = color.rgb[1];
+	document.getElementById('B').innerHTML = color.rgb[2];
+    }  
+  
+  
+  </script>  
+</head>  
+<body bgcolor="white">  
+<header>  
+  <h1>HTML 5 Color Picker Demonstrated</h1>  
+</header>  
+Color: <input class="color {onImmediateChange:'updateLED(this);'}" value="66ff00">
+<p id="R">No color selected</p>
+<p id="G">No color selected</p>
+<p id="B">No color selected</p>
+
+</body>  
+</html>

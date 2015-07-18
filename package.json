@@ -21,10 +21,7 @@
     "url": "https://github.com/pfnegrini/bo-Pi/issues"
   },
   "dependencies": {
-    "express": "4.11.0",
-    "nconf": "0.7.1",
-    "socket.io": "1.0",
-    "pi-blaster": "0.1.0"    
+    "express": "4.11.0"
   },
   "devDependencies": {
     "KEY": "N/A"

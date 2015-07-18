@@ -15,10 +15,35 @@ function initServos(SERVO_1_GPIO, SERVO_2_GPIO) {
           sys.puts(stdout)
       }
       exec('sudo /home/pi/pi-blaster/pi-blaster ' + SERVO_1_GPIO + ' ' + SERVO_2_GPIO);
-      console.log('sudo /home/pi/pi-blaster/pi-blaster ' + SERVO_1_GPIO + ' ' + SERVO_2_GPIO);
       
   }
 
+  
+ 
+ function LEDInit(LED_R, LED_G, LED_B) {
+      function puts(error, stdout, stderr) {
+          sys.puts(stdout)
+      }
+      exec('sudo /home/pi/pi-blaster/pi-blaster ' + LED_R + ' ' + LED_G + ' ' + LED_B);
+      console.log('LED initialized');
+  }
+ 
+ function changeLED(R_Pin, G_Pin, B_Pin, R, G, B)
+  {
+    PWR = rescale(parseFloat(R), 0, 1, 0, 1);
+    PWG = rescale(parseFloat(G), 0, 1, 0, 1);
+    PWB = rescale(parseFloat(B), 0, 1, 0, 1);
+    piblaster.setPwm(R_Pin, PWR);  
+    piblaster.setPwm(G_Pin, PWG);  
+    piblaster.setPwm(B_Pin, PWB);  
+    //console.log('LED ' + R_Pin + ' ' + PWR);
+      
+  }
+  
+exports.LEDInit = LEDInit;
+  exports.changeLED = changeLED;
+  
+  
 function rescale(x, in_min, in_max, out_min, out_max) {
 var output;
 output = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
