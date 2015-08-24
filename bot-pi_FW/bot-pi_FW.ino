@@ -7,7 +7,7 @@
 
 #include <TimedAction.h> // for updating sensors and debug http://bit.ly/pATDBi http://playground.arduino.cc/Code/TimedAction
 #include <EEPROM.h> // for storing configuraion
-#include <avr/wdt.h> // watchdog http://savannah.nongnu.org/projects/avr-libc/
+//#include <avr/wdt.h> // watchdog http://savannah.nongnu.org/projects/avr-libc/
 #include <KalmanFilter.h> // github.com/nut-code-monkey/KalmanFilter-for-Arduino
                           // Try also: https://github.com/TKJElectronics/KalmanFilter.git
 #include <Stepper.h>
@@ -36,6 +36,7 @@ struct Configuration {
   int Lin4Pin;
   int stepsPerRev;
   int maxSpeed;
+  int maxAcc;
   
   double steerGain;
   double throttleGain;
@@ -84,12 +85,13 @@ void setConfiguration(boolean force) {
     configuration.Lin3Pin=10;
     configuration.Lin4Pin=11;
     configuration.stepsPerRev=200;
-    configuration.maxSpeed=120;
+    configuration.maxSpeed=80;
+    configuration.maxAcc = 10;
     
     configuration.steerGain = 1;
     configuration.throttleGain = 1;
-    configuration.Maxsteer = 20; //Max allowed percentage difference. Up to the remote to provide the right scale.  
-    configuration.Maxthrottle = 6; //Max speed expressed in inclination degrees. Up to the remote to provide the right scale.
+    configuration.Maxsteer = 100; //Max allowed percentage difference. Up to the remote to provide the right scale.  
+    configuration.Maxthrottle = 100; //Max speed expressed in inclination degrees. Up to the remote to provide the right scale.
         
     configuration.motorsON = 0;
   
@@ -127,9 +129,17 @@ void setConfiguration(boolean force) {
 String SEPARATOR = ","; //Used as separator for telemetry
 
 int StartL;
+int prevSpeedL = 0;
+int prevSpeedR = 0;
+int currentSpeedL, currentSpeedR;
+
 SerialCommand SCmd;   // The SerialCommand object
+/*
 Stepper motorR(configuration.stepsPerRev, configuration.Rin1Pin, configuration.Rin2Pin, configuration.Rin3Pin, configuration.Rin4Pin);  
 Stepper motorL(configuration.stepsPerRev, configuration.Lin1Pin, configuration.Lin2Pin, configuration.Lin3Pin, configuration.Lin4Pin);  
+*/
+Stepper motorR(200, 4, 5, 6, 7);  
+Stepper motorL(200, 8, 9, 10, 11);  
 
   // These take care of the timing of things
 TimedAction debugTimedAction = TimedAction(configuration.debugSampleRate, debugEverything); //Print debug info
@@ -150,19 +160,20 @@ void setup() {
 
   Serial.begin(SERIAL_BAUD);
   delay(50);
- 
+  Serial.println("Initializing ...");
   // Load config from eeprom
   setConfiguration(true);
   // init i2c and IMU
   delay(100);
   Wire.begin();
-
+  UserControl[0]=0;
+  UserControl[1]=0;
+  
   //Init control systems
   controlConfig();
-
-  
+  motorsSetup();
  
-  wdt_enable(WDTO_2S);
+  //wdt_enable(WDTO_2S);
   
   // Setup callbacks for SerialCommand commands 
   SCmd.addCommand("SCMD", setCommand);       
@@ -173,7 +184,7 @@ void setup() {
 //------------------ Main loop ------------------ 
 void loop() { 
   StartL = millis();
-  wdt_reset();
+  //wdt_reset();
   // update sensors and motors, also chek commands and send back telemetry
   //ADD HERE A TIMED ACTIONS FOR SENSORS
 
@@ -182,7 +193,8 @@ void loop() {
   RemoteReadTimedAction.check();
   TelemetryTXTimedAction.check();
   updateMotorSpeeds(UserControl[0],UserControl[1]);
-  
+
+
 
 
 }

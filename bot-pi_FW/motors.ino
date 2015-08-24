@@ -1,6 +1,3 @@
-
-
-//Updates the motor speeds and the SpeedPID input
 void updateMotorSpeeds(int dX, int dY) {
   
   //val = map(val, 0, 1023, 0, 255);
@@ -18,6 +15,7 @@ void updateMotorSpeeds(int dX, int dY) {
 
 }
 
+
 void motorsSetup() {
   
   pinMode(configuration.Rin1Pin, OUTPUT);
@@ -29,6 +27,8 @@ void motorsSetup() {
   pinMode(configuration.Lin2Pin, OUTPUT);
   pinMode(configuration.Lin3Pin, OUTPUT);
   pinMode(configuration.Lin4Pin, OUTPUT); 
+  Serial.println("Motor setup completed");
+  
 }
 
 

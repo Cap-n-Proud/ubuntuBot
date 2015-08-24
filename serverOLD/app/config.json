@@ -1,0 +1,38 @@
+{
+  "domain": "www.example.com",
+  "database": {
+    "host": "127.0.0.99",
+    "port": 5984
+  },
+  "server": {
+    "name": "bo-Pi",
+    "port": 999,
+    "version": "0.5",
+    "nodeLib": "/usr/local/lib/node_modules/",
+    "SNFolder": "/home/pi/Documents/bo-Pi/",
+    "InstallPath": "/home/pi/bo-Pi/",
+    "debugLevel": "1"
+  },
+  "hardware":{
+    "SERVO_1_GPIO": 4,
+    "SERVO_2_GPIO": 17,
+    "SERVO_1_MIN": "0.140",
+    "SERVO_1_MAX": "0.160",
+    "SERVO_2_MIN": "0.140",
+    "SERVO_2_MAX": "0.160",
+    "LED1_R": "27",
+    "LED1_G": "18",
+    "LED1_B": "25"    
+  },
+  "camera": {
+    "TLimgWidth": 2592,
+    "TLimgHeight": 1944,
+    "TLInterval": 10000,
+    "SNimgWidth": 320,
+    "SNimgHeight": 240    
+  },
+  "MJPG": {
+    "MJPGPort": 9000    
+  }
+  
+}
