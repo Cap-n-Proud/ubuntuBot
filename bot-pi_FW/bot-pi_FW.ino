@@ -1,4 +1,6 @@
-
+// Check this out https://github.com/adafruit/AccelStepper.git
+// https://www.pjrc.com/teensy/td_libs_AccelStepper.html
+//http://42bots.com/tutorials/bipolar-stepper-motor-control-with-arduino-and-an-h-bridge/
 //------------------ Libraries ------------------
 
 
@@ -85,8 +87,8 @@ void setConfiguration(boolean force) {
     configuration.Lin3Pin=10;
     configuration.Lin4Pin=11;
     configuration.stepsPerRev=200;
-    configuration.maxSpeed=80;
-    configuration.maxAcc = 10;
+    configuration.maxSpeed=100;
+    configuration.maxAcc = 5;
     
     configuration.steerGain = 1;
     configuration.throttleGain = 1;
@@ -131,7 +133,8 @@ String SEPARATOR = ","; //Used as separator for telemetry
 int StartL;
 int prevSpeedL = 0;
 int prevSpeedR = 0;
-int currentSpeedL, currentSpeedR;
+int currentSpeedL = 0;
+int currentSpeedR = 0;
 
 SerialCommand SCmd;   // The SerialCommand object
 /*
@@ -193,10 +196,7 @@ void loop() {
   RemoteReadTimedAction.check();
   TelemetryTXTimedAction.check();
   updateMotorSpeeds(UserControl[0],UserControl[1]);
-
-
-
-
+ 
 }
 
 /* just debug functions. uncomment the debug information you want in debugEverything */

@@ -202,7 +202,19 @@ void setCommand()
     { //sign * value
       //SCMD Steer 10
       UserControl[0] = (atof(value) / 100) * configuration.Maxsteer;
-      Serial.println(UserControl[0]);
+     
+      //Serial.println(UserControl[0]);
+    }
+        else if (String("Throttle").equals(arg))
+    { //SCMD Throttle 50
+      UserControl[1] =  (atof(value) / 100) * configuration.Maxthrottle; //((atof(value))/(atof(value))) * max(abs(atof(value)), configuration.Maxthrottle);
+      
+       Serial.println(UserControl[1]);
+    }
+    else if (String("MotorsStop").equals(arg))
+    { //SCMD MotorsStop 1
+      UserControl[1] =  0;
+      UserControl[0] =  0;
     }
     else if (String("Maxsteer").equals(arg))
     { //sign * value
@@ -227,16 +239,7 @@ void setCommand()
       motorL.step(-50);
     }
 
-    else if (String("Throttle").equals(arg))
-    { //SCMD Throttle 50
-      UserControl[1] =  (atof(value) / 100) * configuration.Maxthrottle; //((atof(value))/(atof(value))) * max(abs(atof(value)), configuration.Maxthrottle);
-      Serial.println(UserControl[1]);
-    }
-    else if (String("MotorsStop").equals(arg))
-    { //SCMD MotorsStop 1
-      UserControl[1] =  0;
-      UserControl[0] =  0;
-    }
+
     else if (String("Maxthrottle").equals(arg))
     { //sign * value
       configuration.Maxthrottle = atoi(value);

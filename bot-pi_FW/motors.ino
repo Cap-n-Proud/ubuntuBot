@@ -1,18 +1,49 @@
 void updateMotorSpeeds(int dX, int dY) {
-  
+  //SCMD Throttle 20
   //val = map(val, 0, 1023, 0, 255);
   //if (configuration.motorsON==1){
       //Serial.println("input sent to motors");
-      motorR.setSpeed(map(dY+dX, -100, 100, 0, configuration.maxSpeed));
-      motorL.setSpeed(map(dY-dX, -100, 100, 0, configuration.maxSpeed));
+      currentSpeedL = map(dY-dX, -100, 100, 0, configuration.maxSpeed);
+      currentSpeedR = map(dY+dX, -100, 100, 0, configuration.maxSpeed);
+    if (abs(currentSpeedL)<= configuration.maxSpeed)
+   { 
+    
+    if ((currentSpeedL - prevSpeedL > configuration.maxAcc) && (dX!= 0 | dY!=0))
+      {
+      currentSpeedL = prevSpeedL + configuration.maxAcc;
+        Serial.print("dX ");
+        Serial.print(dX);
+        
+        Serial.print(" dY ");
+        Serial.print(dY);
+
+        Serial.print(" Current speed ");
+        Serial.print(currentSpeedL);
+        
+        Serial.print(" Max acceleration ");
+        Serial.print(configuration.maxAcc);
+        Serial.print(" exceeded.");
+
+        Serial.print(" Prev speed ");        
+        Serial.println(prevSpeedL);
+      prevSpeedL = prevSpeedL + configuration.maxAcc;
+      prevSpeedR = prevSpeedR + configuration.maxAcc;
+        
+      }
+      else
+      {
+      prevSpeedL = currentSpeedL;
+      prevSpeedR = currentSpeedR;
+      //Serial.println("Speed request within tolerances");   
+      }
+      
+      
+      motorR.setSpeed(currentSpeedR);
+      motorL.setSpeed(currentSpeedL);
       motorR.step(sgn(dY+dX)*1);
       motorL.step(-sgn(dY-dX)*1);
-      
-      /*motorLeft.setSpeedPercentage(- configuration.steerGain * (UserControl[0]));
-      motorRight.setSpeedPercentage(-anglePIDOutput + configuration.steerGain * (UserControl[0]))
-  */
 //  }
-
+  }
 }
 
 
