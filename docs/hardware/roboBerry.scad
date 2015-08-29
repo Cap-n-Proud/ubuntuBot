@@ -209,10 +209,12 @@ module SUB_casterPillar() {
         difference() {
             {
                 cube([casterD / 2, 10, casterD], center = true);
-                translate([-casterD / 2 + 6, 0, -casterD / 2 + 4])
-                rotate([0, 90, 0]) SUB_screwM(3, casterD, -0.15);
-            }
-        }
+                translate([-casterD/2,  0, -casterD / 2 + 4])rotate([0, 90, 0])
+                { SUB_screwM(3, casterD, -0.15);
+           cylinder(r=6.5/2,h=0.5*casterD);
+                }
+                }
+        }  //rotate([0, 90, 0])cylinder(r=3.5/2,h=3*casterD);
     }
 }
 
@@ -231,7 +233,7 @@ module casterPillarR() {
 
 module casterSupports() {
     difference() {
-        rotate([0, 0, 90]) translate([-casterD / 2, +casterD / 2, -2 * casterD]) {
+        rotate([0, 0, 90]) translate([-casterD / 2, +casterD / 2, -2 * casterD+10]) {
 
             casterPillarL();
             casterPillarR();
@@ -242,6 +244,7 @@ module casterSupports() {
 }
 
 module nema17(L, negative, T) {
+    //If called with "negative =Y" it will generate a shape to be used with difference() to create a support fo rthe motor. Tolerances for shaft and mounting holes are adjusted accrgingly
     cylinder(r = (5 * (1 + T)) / 2, h = 24, center = false);
     translate([0, 0, 24]) cylinder(r = 22 / 2, h = 2, center = false);
 
@@ -279,6 +282,6 @@ translate([-baseX/2,baseY/2,-casterPillarZ])rotate([90,0,0])caster(casterD);
 */
 
 //caster(casterD);
-
+casterSupports();
 //nema17(32.84,"N",1);
-base();
+//base();

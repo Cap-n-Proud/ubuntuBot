@@ -148,8 +148,12 @@ void setCommand()
 {
   char *arg;
   char *value;
+  char *value2;
+  
   arg = SCmd.next();
   value = SCmd.next();
+  value2 = SCmd.next();
+  
   //This echoes the command back to confirm it is received correctely
   String cmd = String("SCMD " + String(arg) + " " + String(value));
   Serial.println(cmd);
@@ -166,12 +170,7 @@ void setCommand()
       Serial.print("this is a test arg ");
       Serial.println(value);
     }
-    else if (String("speedPIDKi").equals(arg)) {
-      configuration.speedPIDKi = atof(value) / 10000;
-      delay(5);
-      controlConfig();
-      PIDParamTX();
-    }
+    
     else if (String("SerialDebug").equals(arg)) {
       configuration.debug = atoi(value);
     }*/
@@ -198,6 +197,13 @@ void setCommand()
       configuration.steerGain = atoi(value) / 100;
     else if (String("SetthrottelGain").equals(arg))
       configuration.steerGain = atoi(value) / 100;
+    
+    else if (String("move").equals(arg))
+    {
+      
+      UserControl[1] =  (atof(value) / 100) * configuration.Maxthrottle;
+      UserControl[0] = (atof(value2) / 100) * configuration.Maxsteer;
+    }
     else if (String("Steer").equals(arg))
     { //sign * value
       //SCMD Steer 10
@@ -209,7 +215,7 @@ void setCommand()
     { //SCMD Throttle 50
       UserControl[1] =  (atof(value) / 100) * configuration.Maxthrottle; //((atof(value))/(atof(value))) * max(abs(atof(value)), configuration.Maxthrottle);
       
-       Serial.println(UserControl[1]);
+       //Serial.println(UserControl[1]);
     }
     else if (String("MotorsStop").equals(arg))
     { //SCMD MotorsStop 1
@@ -232,11 +238,11 @@ void setCommand()
               Serial.println("testing motors");configuration.Rin4Pin)
   */    Serial.println("testing motors");
      
-      motorR.setSpeed(10);
+      /*motorR.setSpeed(10);
       motorR.step(50);
       Serial.println("testing LEFT motor");
       motorL.setSpeed(10);
-      motorL.step(-50);
+      motorL.step(-50);*/
     }
 
 
@@ -245,6 +251,11 @@ void setCommand()
       configuration.Maxthrottle = atoi(value);
     }
   
+    else if (String("maxAcc").equals(arg))
+    { //sign * value
+      configuration.maxAcc = atoi(value);
+    }
+    
     else if (String("debugLevel").equals(arg))
       configuration.debugLevel = atoi(value);
     else if (String("debugSampleRate").equals(arg))

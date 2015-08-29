@@ -1,29 +1,15 @@
 {
-  "name": "Bo-Pi",
+  "name": "Bailey",
   "version": "1.0.0",
-  "description": "Hack to use Boe-Bot framework with raspbewrry Pi 2. the program is powered by node.js, express and Foundation by Zurb",
-  "scripts": {
-    "start": "./app/server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pfnegrini/bo-Pi.git"
-  },
-  "keywords": [
-    "express.js",
-    "Node.io",
-    "Raspberry Pi",
-    "Camera"
-  ],
-  "author": "Paolo Negrini <pfnegrini@gmail.com> (https://paolonegrini.wordpress.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/pfnegrini/bo-Pi/issues"
-  },
+  "description": "Bailey server",
+  "main": "server.js",
   "dependencies": {
-    "express": "4.11.0"
+    "string": "^2.1.0"
   },
-  "devDependencies": {
-    "KEY": "N/A"
-  }
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }

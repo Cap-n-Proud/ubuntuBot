@@ -1,3 +1,11 @@
+var nconf = require('/usr/local/lib/node_modules/nconf');
+nconf.argv()
+       .env()
+       .file({ file: __dirname + '/config.json' });
+
+var nodeLib = nconf.get('server:nodeLib');
+
+var fs = require(nodeLib + 'safefs');
 
 
 /*
@@ -51,6 +59,41 @@ Object.keys(ifaces).forEach(function (ifname) {
 
 }
 
+function setTelemetryFile(PathTelFile, TelemetryFN, TelemetryHeader, PIDHeader, SEPARATOR)
+{
+	var file = fs.createWriteStream(PathTelFile+TelemetryFN);
+        var Headers = TelemetryHeader.concat(PIDHeader);
+        Headers = 'Timestamp' + SEPARATOR + Headers.join(", ");
+        Headers = Headers.replace(/[\n\r]/g, '');
+        Headers = Headers + '\n';
+        
+        //file.write(Headers.join(", "), function (err) {
+        file.write(Headers, function (err) {
+        if (err) {
+            console.log('ERROR: ' + err);
+	    console.log(LogRow + '\n' )
+            LogR=0;
+		  }
+	});    
+}
+
+function addTelemetryRow(PathTelFile, TelemetryFN, TelemetryHeader, data, PIDHeader, PIDVal, SEPARATOR){
+    LogRow = new Date().getTime() + SEPARATOR;
+    LogRow = LogRow + data.replace(/[\n\r]/g, '') + PIDVal + '\n';  
+    fs.appendFile(PathTelFile+TelemetryFN, LogRow, function (err) {
+        if (err) {
+            console.log('ERROR: ' + err);
+	    console.log(LogRow + '\n' )
+            LogR=0;
+		  }
+	});
+}
+
+
+
+
    // exports ======================================================================
   exports.timeStamp = timeStamp;
   exports.getServerIP = getServerIP;
+  exports.addTelemetryRow = addTelemetryRow;
+  exports.setTelemetryFile = setTelemetryFile;

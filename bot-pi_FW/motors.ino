@@ -1,63 +1,35 @@
 void updateMotorSpeeds(int dX, int dY) {
-  //SCMD Throttle 20
-  //val = map(val, 0, 1023, 0, 255);
-  //if (configuration.motorsON==1){
-      //Serial.println("input sent to motors");
-      currentSpeedL = map(dY-dX, -100, 100, 0, configuration.maxSpeed);
-      currentSpeedR = map(dY+dX, -100, 100, 0, configuration.maxSpeed);
-    if (abs(currentSpeedL)<= configuration.maxSpeed)
-   { 
-    
-    if ((currentSpeedL - prevSpeedL > configuration.maxAcc) && (dX!= 0 | dY!=0))
+      //SCMD move 30 -10 
+      currentSpeedL = -map(dY-dX, -100, 100, -configuration.maxSpeed, configuration.maxSpeed);
+      currentSpeedR = -map(dY+dX, -100, 100,  -configuration.maxSpeed, configuration.maxSpeed);
+
+      //motorR.move(sgn(dX-dY)*10000);
+      //motorL.move(-sgn(+dX+dY)*10000);
+      motorR.move(+sgn(currentSpeedR)*10000);
+      motorL.move(+sgn(currentSpeedL)*10000);
+      
+      motorR.setMaxSpeed(abs(currentSpeedR));
+      motorL.setMaxSpeed(abs(currentSpeedL));
+      if (currentSpeedR == 0 && currentSpeedL == 0)
       {
-      currentSpeedL = prevSpeedL + configuration.maxAcc;
-        Serial.print("dX ");
-        Serial.print(dX);
-        
-        Serial.print(" dY ");
-        Serial.print(dY);
-
-        Serial.print(" Current speed ");
-        Serial.print(currentSpeedL);
-        
-        Serial.print(" Max acceleration ");
-        Serial.print(configuration.maxAcc);
-        Serial.print(" exceeded.");
-
-        Serial.print(" Prev speed ");        
-        Serial.println(prevSpeedL);
-      prevSpeedL = prevSpeedL + configuration.maxAcc;
-      prevSpeedR = prevSpeedR + configuration.maxAcc;
-        
+       motorR.disableOutputs();
+       motorL.disableOutputs();
+       
       }
       else
       {
-      prevSpeedL = currentSpeedL;
-      prevSpeedR = currentSpeedR;
-      //Serial.println("Speed request within tolerances");   
+        motorR.run();
+        motorL.run();
       }
-      
-      
-      motorR.setSpeed(currentSpeedR);
-      motorL.setSpeed(currentSpeedL);
-      motorR.step(sgn(dY+dX)*1);
-      motorL.step(-sgn(dY-dX)*1);
-//  }
-  }
+
 }
 
 
 void motorsSetup() {
   
-  pinMode(configuration.Rin1Pin, OUTPUT);
-  pinMode(configuration.Rin2Pin, OUTPUT);
-  pinMode(configuration.Rin3Pin, OUTPUT);
-  pinMode(configuration.Rin4Pin, OUTPUT);
-
-  pinMode(configuration.Lin1Pin, OUTPUT);
-  pinMode(configuration.Lin2Pin, OUTPUT);
-  pinMode(configuration.Lin3Pin, OUTPUT);
-  pinMode(configuration.Lin4Pin, OUTPUT); 
+  
+  motorR.setAcceleration(configuration.maxAcc);
+  motorL.setAcceleration(configuration.maxAcc); 
   Serial.println("Motor setup completed");
   
 }

@@ -12,7 +12,7 @@
 //#include <avr/wdt.h> // watchdog http://savannah.nongnu.org/projects/avr-libc/
 #include <KalmanFilter.h> // github.com/nut-code-monkey/KalmanFilter-for-Arduino
                           // Try also: https://github.com/TKJElectronics/KalmanFilter.git
-#include <Stepper.h>
+#include <AccelStepper.h> //https://github.com/adafruit/AccelStepper.git
 
 #define SERIALCOMMAND_HARDWAREONLY 1
 #include <SerialCommand.h> // https://github.com/kroimon/Arduino-SerialCommand.git
@@ -87,8 +87,8 @@ void setConfiguration(boolean force) {
     configuration.Lin3Pin=10;
     configuration.Lin4Pin=11;
     configuration.stepsPerRev=200;
-    configuration.maxSpeed=100;
-    configuration.maxAcc = 5;
+    configuration.maxSpeed=300;
+    configuration.maxAcc = 25;
     
     configuration.steerGain = 1;
     configuration.throttleGain = 1;
@@ -137,12 +137,14 @@ int currentSpeedL = 0;
 int currentSpeedR = 0;
 
 SerialCommand SCmd;   // The SerialCommand object
-/*
-Stepper motorR(configuration.stepsPerRev, configuration.Rin1Pin, configuration.Rin2Pin, configuration.Rin3Pin, configuration.Rin4Pin);  
-Stepper motorL(configuration.stepsPerRev, configuration.Lin1Pin, configuration.Lin2Pin, configuration.Lin3Pin, configuration.Lin4Pin);  
-*/
-Stepper motorR(200, 4, 5, 6, 7);  
-Stepper motorL(200, 8, 9, 10, 11);  
+
+//AccelStepper motorR(4, configuration.Rin1Pin, configuration.Rin2Pin, configuration.Rin3Pin, configuration.Rin4Pin);  
+//AccelStepper motorL(4, configuration.Lin1Pin, configuration.Lin2Pin, configuration.Lin3Pin, configuration.Lin4Pin);  
+
+//Stepper motorR(200, 4, 5, 6, 7);  
+//Stepper motorL(200, 8, 9, 10, 11);  
+AccelStepper motorR(4, 4, 5, 6, 7);
+AccelStepper motorL(4, 8, 9, 10, 11);
 
   // These take care of the timing of things
 TimedAction debugTimedAction = TimedAction(configuration.debugSampleRate, debugEverything); //Print debug info

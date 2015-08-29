@@ -178,9 +178,11 @@ temperature = ((temperature/1000).toPrecision(3)) + "°C";
   
     socket.on('move', function(dX, dY){
 	//console.log('event: ', dX, dY);
-	serialPort.write('SCMD Steer ' + Math.round(dX) + '\n');
-	serialPort.write('SCMD Throttle ' + Math.round(dY) + '\n');
-	//log.debug('Move command SCMD ' + CMD);
+	//serialPort.write('SCMD Steer ' + Math.round(dX) + '\n');
+	//serialPort.write('SCMD Throttle ' + Math.round(dY) + '\n');
+	serialPort.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
+	
+        //log.debug('Move command SCMD ' + CMD);
 	});
     
   //Server Commands
