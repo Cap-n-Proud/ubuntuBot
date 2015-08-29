@@ -1,2 +1,2 @@
 # bo-Pi
-This package allows to use a raspberry Pi with the Boe-Bot frame.
+This is a 3D printed robot using both Raspberry Pi and Arduino Mega
