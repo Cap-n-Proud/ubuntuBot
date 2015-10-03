@@ -1,4 +1,4 @@
-var nconf = require('/usr/local/lib/node_modules/nconf');
+var nconf = require('nconf');
 nconf.argv()
        .env()
        .file({ file: __dirname + '/config.json' });

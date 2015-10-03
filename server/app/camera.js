@@ -1,8 +1,8 @@
-   var nconf = require('/usr/local/lib/node_modules/nconf');
+   var nconf = require('nconf');
 nconf.argv()
     .env()
     .file({
-        file: '/home/pi/bo-Pi/app/config.json'
+        file: 'config.json'
     });
 
 var nodeLib = nconf.get('server:nodeLib');

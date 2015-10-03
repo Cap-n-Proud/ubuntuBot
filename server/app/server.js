@@ -2,7 +2,7 @@
 // to refresh the port allocation
 // cd /home/pi/Bailey/server/app
 
-var nconf = require('/usr/local/lib/node_modules/nconf');
+var nconf = require('nconf');
 nconf.argv()
        .env()
        .file({ file: __dirname + '/config.json' });
@@ -33,8 +33,8 @@ var log = bunyan.createLogger({
 var fs = require(nodeLib + 'safefs');
 var SEPARATOR = nconf.get('telemetry:SEPARATOR');
 var installPath = nconf.get('server:installPath');
-var com = require('/home/pi/bot-Pi/server/app/node_modules/serialport');
-var express = require(nodeLib + 'express');
+var com = require('serialport');
+var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require(nodeLib + 'socket.io')(http);

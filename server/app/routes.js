@@ -2,10 +2,10 @@
 // Routers
 // expose the routes to our app with module.exports
 
-var nconf = require('/usr/local/lib/node_modules/nconf');
+var nconf = require('nconf');
 nconf.argv()
        .env()
-       .file({ file: '/home/pi/bot-Pi/server/app/config.json' });
+       .file({ file: 'config.json' });
 var installPath = nconf.get('server:installPath');
 
 
@@ -22,7 +22,7 @@ var path = require('path');
 // Routers
 {
 app.get('/', function(req, res){
-  res.sendFile('/home/pi/bot-Pi/server/wwwroot/index.html');
+  res.sendFile(installPath + 'server/wwwroot/index.html');
   res.end;
 });
 

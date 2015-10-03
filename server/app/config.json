@@ -5,7 +5,7 @@
     "serBaud": 38400,
     "serPort": "/dev/ttyACM0",
     "version": "13",
-    "nodeLib": "/usr/local/lib/node_modules/",
+    "nodeLib": "",
     "SNFolder": "/home/pi/Documents/SN/",
     "installPath": "/home/pi/bot-Pi/",
     "logfilePath": "/home/pi/Documents/log/",
