@@ -35,7 +35,7 @@
     "SNimgHeight": 240    
   },
   "MJPG": {
-    "MJPGPort": 9000    
+    "MJPGPort": 9999    
   }
   
 }

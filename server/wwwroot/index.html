@@ -9,11 +9,12 @@
     <meta content="yes" name="mobile-web-app-capable">
     <link href="foundation/css/foundation.css" rel="stylesheet">
     <script src="foundation/js/vendor/modernizr.js"></script>
+        <script src="foundation/js/vendor/jquery.js"></script>
+    <script src="foundation/js/foundation.min.js"></script>
     <link href="css/custom.css" rel="stylesheet">
-    <script src="js/foundation/foundation.js"></script>
     <link rel='shortcut icon' type='image/x-icon' href='icons/favicon.ico' />
    <!-- <script src="js/foundation/foundation.slider.js"></script>-->
-    <script src="/js/socket.io.js" type="text/javascript"></script>
+    <script src="js/socket.io.js" type="text/javascript"></script>
     <!--  <script src="jQuery/lib/jquery-1.7.1.js"></script>-->
     <!--    <link rel="text/html" href="favicon.html">-->
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
@@ -389,11 +390,10 @@ $(document).foundation();
        
     <script>
     var serverADDR = "N/A";
-    
     var serverPort = "N/A";
-    var videoFeedPort = "N/A";
+    var MJPGPort = "N/A";
     
-var socket = io();
+    var socket = io();
     //Slide ranges are automatically calculated as percentage of the default config from Arduino
     var PID_SLIDE_RANGE = 1.50; 
 
@@ -410,6 +410,9 @@ var socket = io();
     for(var i=0;i<classname.length;i++){
         classname[i].addEventListener('change', myFunction, false);
     }
+
+  
+    
     }
 
    {
@@ -498,9 +501,9 @@ var socket = io();
     });
 
     socket.on('status', function (y, p, r, b, dISTE) {
-    document.getElementById("BAL").innerHTML = dISTE;
-    document.getElementById("Pitch").innerHTML = p;
-    document.getElementById("Compass").innerHTML = y;
+        document.getElementById("BAL").innerHTML = dISTE;
+        document.getElementById("Pitch").innerHTML = p;
+        document.getElementById("Compass").innerHTML = y;
     
     }); 
 
@@ -542,18 +545,20 @@ var socket = io();
     }
 
    
-    socket.on('connected', function(info, serverAddress, sPort, videoPort, PID){
+    socket.on('connected', function(info, serverADDR, sPort, MJPEGPort, PID){
     started=0;
    
-   serverADDR = serverAddress.toString();
+    serverADDR = serverADDR.toString();
     serverPort = sPort.toString(); 
-    videoFeedPort = videoPort.toString();
-    document.getElementById("botControl").src = 'http://' + serverADDR + ':' + serverPort + '/vj';
-    document.getElementById("telemetryGPH").src = '';
+    MJPEGPort = MJPEGPort.toString();
     
-   document.getElementById("Info").innerHTML = info;
+    document.getElementById("botControl").src = 'http://' + serverADDR + ':' + serverPort + '/vj';
+    document.getElementById('videoFeed').src = 'http://' + serverADDR + ':' + MJPEGPort;
+    document.getElementById("telemetryGPH").src = '';
+    //console.log('http://' + serverADDR + ':' + MJPEGPort);
+    document.getElementById("Info").innerHTML = info;
    //document.getElementById("CMD").innerHTML = 'http://' + serverADDR + ':' + serverPort + '/vj';
-   
+    camFeedRefresh();
     setSliders(PID);
    // document.getElementById("Info").innerHTML = server;
    
@@ -584,7 +589,7 @@ var socket = io();
     }
 	
 	function camFeedRefresh(){
-	     document.getElementById('videoFeed').src = document.getElementById('videoFeed').src = document.getElementById("videoFeed").src = 'http://' + serverADDR + ':' + videoFeedPort + '/javascript_simple.html';
+	     document.getElementById('videoFeed').src = document.getElementById('videoFeed').src = document.getElementById("videoFeed").src = 'http://' + serverADDR + ':' + MJPEGPort;
 
 		
 	}
@@ -614,8 +619,10 @@ function toggleTelemetryGPH(element){
 
     </script> 
 
-      <script src="js/foundation/js/vendor/jquery.js"></script>
-    <script src="js/foundation/js/foundation.min.js"></script>
+
+    
+
+    
     <script>
       $(document).foundation();
     </script>

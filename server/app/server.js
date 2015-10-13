@@ -38,20 +38,23 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require(nodeLib + 'socket.io')(http);
-
 var sys = require('sys');
 var exec = require('child_process').exec;
+
 
 var serPort = nconf.get('server:serPort');
 var serBaud = nconf.get('server:serBaud');
 var serverPort = nconf.get('server:serverPort');
 var version = nconf.get('server:version');
-var videoFeedPort = nconf.get('MJPG:MJPGPort');
+var MJPGPort = nconf.get('MJPG:MJPGPort');
 
 // include custom functions ======================================================================
 var systemModules = require(installPath + 'server/app/systemModules');
 var functions = require(installPath + 'server/app/functions');
 var camera = require(installPath + 'server/app/camera');
+var MJPEG = require(installPath + 'server/app/MJPEG');
+
+
 //var robot = require(installPath + 'server/app/robot');
 
 // load the routes
@@ -78,6 +81,7 @@ var Telemetry ={};
 var PID ={};
 var PIDVal;
 var ArduSys = {};
+
 
 /*
  Can use a try... catch statement
@@ -129,6 +133,9 @@ Object.keys(ifaces).forEach(function (ifname) {
   });
 });
 
+
+
+
 //---------------
 
 io.on('connection', function(socket){
@@ -141,8 +148,8 @@ io.on('connection', function(socket){
    serialPort.write('READ RemoteInit\n\r');
     //Trasmit system and PID parameters
    
-    socket.emit('serverADDR', serverADDR);
-    socket.emit('connected', startMessage, serverADDR, serverPort, videoFeedPort, PID);
+    //socket.emit('serverADDR', serverADDR);
+    socket.emit('connected', startMessage, serverADDR, serverPort, MJPGPort, PID);
     console.log('New socket.io connection - id: %s', socket.id);
     
     //Add also the disconnection event
@@ -150,7 +157,8 @@ io.on('connection', function(socket){
 
   setInterval(function(){
   if(THReceived==1)socket.emit('status', Telemetry['yaw'], Telemetry['pitch'], Telemetry['roll'], Telemetry['bal'], Telemetry['dISTE']);
-  if(Telemetry['pitch'] > 60)log.error('BALANCING FAIL! Pitch: ' + Telemetry['pitch']);            
+  if(Telemetry['pitch'] > 60)log.error('BALANCING FAIL! Pitch: ' + Telemetry['pitch']); 
+              console.log(Telemetry['pitch']);
   }, 250);
 
   
@@ -232,6 +240,12 @@ temperature = ((temperature/1000).toPrecision(3)) + "°C";
     log.info('Client disconnected ' + socket.id);
   }); 
   
+  socket.on('connected', function(){
+    console.log('CONNECTED id: %s', socket.id);
+   // log.info('Client disconnected ' + socket.id);sudo modprobe bcm2835-v4l2
+  });   
+  
+  
     eventEmitter.on('CMDecho', function(data){
         socket.emit('CMD', data);
 
@@ -253,7 +267,7 @@ io.on('disconnect', function () {
 
 http.listen(serverPort, function(){
 console.log('listening on *: ', serverPort);
-log.info('Server listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
+log.info('Server listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + MJPGPort);
 
 greetings();  
   
@@ -400,3 +414,95 @@ We store sensor data in arrays.
 });
  
 });
+
+
+
+var cv = require('opencv');
+var i = 0;
+
+var http2 = require('http');
+var fs = require('fs');
+var mjpegServer = require('./mjpeg-server');
+
+var camera = new cv.VideoCapture(0);
+//var window = new cv.NamedWindow('Video', 0)
+var imageW = 320,
+	imageH = 240;
+
+camera.setWidth(imageW);
+camera.setHeight(imageH);
+
+http2.createServer(function(req, res) {
+    
+   MJPEG.startVideoFeed(req, res); 
+  
+}).listen(MJPGPort);
+
+/*
+http2.createServer(function(req, res) {
+	//console.log("Got request");
+
+	mjpegReqHandler = mjpegServer.createReqHandler(req, res);
+	var i = 0;
+	var timer = setInterval(captureImg, 100);
+
+	function captureImg() {
+		var toTransmit = "";
+		var tempFile = "";
+		camera.read(function(err, im) {
+			if (err) throw err;
+			//console.log("Image acquired: ", im.size());
+			//console.log(im.isBuffer());
+
+			var width = im.width();
+			var height = im.height();
+			var c = ["255", "130", "0"];
+			//im.rotate(180);
+			//im.convertGrayscale();
+			im.putText("f: " + i, 15, height - 10, "CV_FONT_HERSHEY_SIMPLEX", [100, 200, 50], 0.5);
+			im.putText("p:", width - 50, height - 50, "CV_FONT_HERSHEY_SIMPLEX", [100, 200, 50], 0.5);
+			im.putText("b:", width - 50, height - 30, "CV_FONT_HERSHEY_SIMPLEX", [100, 200, 50], 0.5);
+			im.putText("r:", width - 50, height - 10, "CV_FONT_HERSHEY_SIMPLEX", [100, 200, 50], 0.5);
+
+
+			
+			drawCrossHair(im);
+			if (im.size()[0] > 0 && im.size()[1] > 0) {
+
+				//toTransmit = im.toBufferAsync(sendJPGData);
+				im.toBufferAsync(sendJPGData);
+
+
+				i++;
+			}
+		});
+
+	}
+
+
+
+	
+	function sendJPGData(err, data) {
+		mjpegReqHandler.write(data, function() {});
+	}
+
+	function checkIfFinished() {
+		if (i > 100) {
+			clearInterval(timer);
+			mjpegReqHandler.close();
+			console.log('End Request');
+		}
+	}
+
+	function drawCrossHair(im)
+		{
+			im.line([im.width() / 2 - 20, im.height() / 2], [im.width() / 2 - 40, im.height() / 2])
+			im.line([im.width() / 2 + 20, im.height() / 2], [im.width() / 2 + 40, im.height() / 2])
+			im.line([im.width() / 2, im.height() / 2 - 20], [im.width() / 2, im.height() / 2- 40])
+		im.line([im.width() / 2, im.height() / 2 + 20], [im.width() / 2, im.height() / 2 + 40])
+
+	
+		}
+
+}).listen(9999);
+*/

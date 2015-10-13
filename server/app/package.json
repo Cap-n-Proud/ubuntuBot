@@ -1,6 +1,6 @@
 {
   "name": "bot-PI",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Node application to control robots",
   "main": "server.js",
   "dependencies": {
@@ -11,7 +11,8 @@
 	"fs": "0.x.x",
 	"serialport": "1.x.x",
 	"safefs": "4.x.x",
-	"socket.io": "1.x.x"
+	"socket.io": "1.x.x",
+	"opencv": "3.x.x"
 	},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
