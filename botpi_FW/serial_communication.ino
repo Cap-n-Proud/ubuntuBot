@@ -41,9 +41,21 @@ void TelemetryTX()
 
   String line = "";
   if (!configuration.debug) {
-    char buffer[10];
+    char ypr0[6], ypr1[6], ypr2[6], headingBuff[6], altBuff[6];
+  String telemMarker ="T";
     //Need to calculate parameters here because the main loop has a different frequency
     TxLoopTime = millis()-TxLoopTime;
+    
+   
+  String line = telemMarker + SEPARATOR + 
+        dtostrf(ypr[0],1,2,ypr0) +  SEPARATOR + 
+        dtostrf(ypr[1],1,2,ypr1) +  SEPARATOR + 
+        dtostrf(ypr[2],1,2,ypr2) +  SEPARATOR +
+        dtostrf(154.25,1,2,headingBuff) +  SEPARATOR +
+        //dtostrf(altimeter,1,2,altBuff) +  SEPARATOR +
+        LoopT;
+
+Serial.println(line); 
     
     /*line = "T" + SEPARATOR
            + yaw + SEPARATOR
@@ -108,21 +120,15 @@ void RemoteInit()
   //TH - Telemetry
   //PIDH - PID
   //SYSH - System
-  /*String headers = "";
+  String headers = "";
   headers = "TH" + SEPARATOR +
             "yaw" + SEPARATOR +
             "pitch" + SEPARATOR +
             "roll" + SEPARATOR +
-            "pitchSpeed" + SEPARATOR +
-            //"bal" + SEPARATOR +
-            "dISTE" + SEPARATOR +
-            //"anglePIDOutput" + SEPARATOR +
-            "leftMotorSpeed" + SEPARATOR +
-            "rightMotorSpeed" + SEPARATOR +
+            "alt" + SEPARATOR + 
             "LoopT";
-  //+ SEPARATOR +
-  //"LastEvent";
-  Serial.println(headers);
+ 
+  Serial.println(headers);/*
   delay(100);
   headers = "PIDH" + SEPARATOR +
             "speedPIDKp" + SEPARATOR +

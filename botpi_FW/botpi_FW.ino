@@ -3,9 +3,18 @@
 //http://42bots.com/tutorials/bipolar-stepper-motor-control-with-arduino-and-an-h-bridge/
 //------------------ Libraries ------------------
 
-
-#include <Wire.h> // for i2c
+//#define DEBUG
+#include "DebugUtils.h"
+#include "CommunicationUtils.h"
+#include "FreeIMU.h"
+#include <Wire.h>
 #include <SPI.h>
+#include <I2Cdev.h>
+#include <MPU60X0.h>
+#define M_PI 3.14159265358979323846f
+  #include <MS561101BA.h>
+#include <HMC58X3.h>
+#include <Wire.h> // for i2c
 
 #include <TimedAction.h> // for updating sensors and debug http://bit.ly/pATDBi http://playground.arduino.cc/Code/TimedAction
 #include <EEPROM.h> // for storing configuraion
@@ -129,8 +138,14 @@ void setConfiguration(boolean force) {
 
 
 String SEPARATOR = ","; //Used as separator for telemetry
+float ypr[3];
+float altimeter; // yaw pitch roll
 
-int StartL;
+// Set the FreeIMU object
+FreeIMU my3IMU = FreeIMU();
+
+
+int StartL, LoopT;
 int prevSpeedL = 0;
 int prevSpeedR = 0;
 int currentSpeedL = 0;
@@ -148,12 +163,15 @@ AccelStepper motorL(4, 8, 9, 10, 11);
 
   // These take care of the timing of things
 TimedAction debugTimedAction = TimedAction(configuration.debugSampleRate, debugEverything); //Print debug info
-//TimedAction updateMotorStatusesTimedAction = TimedAction(configuration.motorSpeedSensorSampling, updateMotorSpeeds); //
+//TimedAction updateMotorSpeedTimedAction = TimedAction(100, updateMotorSpeeds); //
 //ADD HERE A TIMED ACTIONS FOR SENSORS
 //TimedAction remoteControlWatchdogTimedAction = TimedAction(5000, stopRobot);
 
 //Reads serial for commands
 TimedAction RemoteReadTimedAction = TimedAction(250, RemoteRead);
+
+//Reads serial for commands
+TimedAction ReadIMUTimedAction = TimedAction(100, ReadIMU);
 
 //Upload telemetry data
 TimedAction TelemetryTXTimedAction = TimedAction(250, TelemetryTX);
@@ -179,6 +197,9 @@ void setup() {
   motorsSetup();
  
   //wdt_enable(WDTO_2S);
+  delay(5);
+  my3IMU.init(); // the parameter enable or disable fast mode
+  delay(5);
   
   // Setup callbacks for SerialCommand commands 
   SCmd.addCommand("SCMD", setCommand);       
@@ -195,9 +216,12 @@ void loop() {
 
   
   //updateMotorStatusesTimedAction.check();
+  ReadIMUTimedAction.check();
   RemoteReadTimedAction.check();
   TelemetryTXTimedAction.check();
+  //updateMotorSpeedTimedAction.check();
   updateMotorSpeeds(UserControl[0],UserControl[1]);
+ LoopT = millis() - StartL;
  
 }
 
@@ -219,5 +243,13 @@ void debugEverything() {
   Serial.println();
 
 };
+
+void ReadIMU() {
+  my3IMU.getYawPitchRoll(ypr);
+  altimeter = my3IMU.getBaroAlt();
+  
+  
+}
+  
 
 
