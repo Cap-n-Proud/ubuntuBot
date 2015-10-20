@@ -40,6 +40,7 @@ void TelemetryTX()
 { // for help on dtostrf http://forum.arduino.cc/index.php?topic=85523.0
 
   String line = "";
+  String line2="";
   if (!configuration.debug) {
     char ypr0[6], ypr1[6], ypr2[6], headingBuff[6], altBuff[6];
   String telemMarker ="T";
@@ -51,11 +52,14 @@ void TelemetryTX()
         dtostrf(ypr[0],1,2,ypr0) +  SEPARATOR + 
         dtostrf(ypr[1],1,2,ypr1) +  SEPARATOR + 
         dtostrf(ypr[2],1,2,ypr2) +  SEPARATOR +
-        dtostrf(154.25,1,2,headingBuff) +  SEPARATOR +
-        //dtostrf(altimeter,1,2,altBuff) +  SEPARATOR +
+        "test" + SEPARATOR;
+  String line2 =      
+        //dtostrf(heading,1,2,headingBuff) +  SEPARATOR +
+        "N/A" +  SEPARATOR +
+        dtostrf(altimeter,1,2,altBuff) +  SEPARATOR +
         LoopT;
 
-Serial.println(line); 
+Serial.println(line + line2); 
     
     /*line = "T" + SEPARATOR
            + yaw + SEPARATOR
@@ -125,6 +129,7 @@ void RemoteInit()
             "yaw" + SEPARATOR +
             "pitch" + SEPARATOR +
             "roll" + SEPARATOR +
+            "heading" + SEPARATOR + 
             "alt" + SEPARATOR + 
             "LoopT";
  
