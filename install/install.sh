@@ -57,8 +57,8 @@ sudo chmod 0755 /home/pi/Documents/log/
 echo -e "***** Setting up  OpenCV *****"
 sudo apt-get install -y build-essential cmake pkg-config
 sudo apt-get install -y libjpeg8-dev libtiff4-dev libjasper-dev libpng12-dev
-sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
 sudo apt-get install -y libgtk2.0-dev
+sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
 sudo apt-get install -y libatlas-base-dev gfortran
 wget https://bootstrap.pypa.io/get-pip.py
 sudo python get-pip.py
@@ -74,9 +74,9 @@ mkvirtualenv cv
 sudo apt-get install -y python2.7-dev
 pip install numpy
 
-wget -O opencv-2.4.11.zip http://sourceforge.net/projects/opencvlibrary/files/opencv-unix/2.4.11/opencv-2.4.11.zip/download
-unzip opencv-2.4.11.zip
-cd opencv-2.4.11
+wget -O opencv-2.4.10.zip http://sourceforge.net/projects/opencvlibrary/files/opencv-unix/2.4.10/opencv-2.4.10.zip/download
+unzip opencv-2.4.10.zip
+cd opencv-2.4.10
 
 echo -e "***** Configuring make *****"
 mkdir build
