@@ -1,13 +1,3 @@
-   var nconf = require('nconf');
-nconf.argv()
-    .env()
-    .file({
-        file: 'config.json'
-    });
-
-var nodeLib = nconf.get('server:nodeLib');
-var exec = require('child_process').exec;
-var debugLevel = nconf.get('server:debugLevel');
    
    function snapShotTL(imgWidth, imgHeight, folderName, fileName) {
 

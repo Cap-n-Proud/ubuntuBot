@@ -1,14 +1,8 @@
 
 // Routers
 // expose the routes to our app with module.exports
-
-var nconf = require('nconf');
-nconf.argv()
-       .env()
-       .file({ file: 'config.json' });
-var installPath = nconf.get('server:installPath');
-
-
+var server = require('./server');
+var installPath = "";//server.nconf.get('server:installPath');
 module.exports = function(app) {
 
 var path = require('path'); 
@@ -22,43 +16,49 @@ var path = require('path');
 // Routers
 {
 app.get('/', function(req, res){
-  res.sendFile(installPath + 'server/wwwroot/index.html');
+  res.sendFile(server.nconf.get('server:installPath') + 'server/wwwroot/index.html');
   res.end;
 });
 
 
 app.get('/d3test', function(req, res) {
-  res.sendFile(installPath + 'server/wwwroot/d3test.html');
+  res.sendFile(server.nconf.get('server:installPath') + 'server/wwwroot/d3test.html');
   res.end;
 });
 
 app.get('/showConfig', function(req, res) {
-  res.sendFile(installPath + 'server/wwwroot/showConfig.html');
+  res.sendFile(server.nconf.get('server:installPath') + 'server/wwwroot/showConfig.html');
   res.end;
 });
 
 app.get('/d3', function(req, res) {
-  res.sendFile(installPath + 'server/wwwroot/D3.html');
+  res.sendFile(server.nconf.get('server:installPath') + 'server/wwwroot/D3.html');
   res.end;
 });
 
 app.get('/livedata', function(req, res) {
-  res.sendFile(installPath + 'server/wwwroot/livedata.html');
+  res.sendFile(server.nconf.get('server:installPath') + 'server/wwwroot/livedata.html');
   res.end;
 });
 
+app.get('/video', function(req, res) {
+  res.sendFile(server.nconf.get('server:installPath') + 'server/wwwroot/video.html');
+  res.end;
+});
+
+
 app.get('/serialMonitor', function(req, res) {
-  res.sendFile(installPath + 'server/wwwroot/serialMonitor.html');
+  res.sendFile(server.nconf.get('server:installPath') + 'server/wwwroot/serialMonitor.html');
   res.end;
 });
 
 app.get('/test', function(req, res) {
-  res.sendFile('/home/pi/Bailey/server/wwwroot/test.html');
+  res.sendFile(server.nconf.get('server:installPath') + 'server/wwwroot/test.html');
   res.end;
 });
 
 app.get('/vj', function(req, res) {
-  res.sendFile(installPath + 'server/wwwroot/robotj.html');
+  res.sendFile(server.nconf.get('server:installPath') + 'server/wwwroot/robotj.html');
   res.end;
 });
 

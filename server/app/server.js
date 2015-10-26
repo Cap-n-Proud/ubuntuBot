@@ -13,7 +13,7 @@ var nodeLib = nconf.get('server:nodeLib');
 var logfilePath = nconf.get('server:logfilePath');
 
 var telemetryfilePath = nconf.get('telemetry:telemetryfilePath');
-var bunyan = require(nodeLib + 'bunyan');
+var bunyan = require('bunyan');
 
 //--------------- Logging middleware ---------------
 var log = bunyan.createLogger({
@@ -30,14 +30,14 @@ var log = bunyan.createLogger({
   ]
 });
 
-var fs = require(nodeLib + 'safefs');
+var fs = require('safefs');
 var SEPARATOR = nconf.get('telemetry:SEPARATOR');
 var installPath = nconf.get('server:installPath');
 var com = require('serialport');
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
-var io = require(nodeLib + 'socket.io')(http);
+var io = require('socket.io')(http);
 var sys = require('sys');
 var exec = require('child_process').exec;
 
@@ -46,13 +46,16 @@ var serPort = nconf.get('server:serPort');
 var serBaud = nconf.get('server:serBaud');
 var serverPort = nconf.get('server:serverPort');
 var version = nconf.get('server:version');
-var MJPGPort = nconf.get('MJPG:MJPGPort');
+var videoFeedPort = nconf.get('video:port');
+var videoWidth = nconf.get('video:videoWidth');
+var videoHeight = nconf.get('video:videoHeight');
+var fps= nconf.get('video:fps');
 
 // include custom functions ======================================================================
-var systemModules = require(installPath + 'server/app/systemModules');
-var functions = require(installPath + 'server/app/functions');
-var camera = require(installPath + 'server/app/camera');
-var MJPEG = require(installPath + 'server/app/MJPEG');
+var systemModules = require(installPath + 'server/app/lib/systemModules');
+var functions = require(installPath + 'server/app/lib/functions');
+var camera = require(installPath + 'server/app/lib/camera');
+var videoFeed = require(installPath + 'server/app/lib/video');
 
 
 //var robot = require(installPath + 'server/app/robot');
@@ -61,11 +64,6 @@ var MJPEG = require(installPath + 'server/app/MJPEG');
 require('./routes')(app);
 
 app.use(express.static(installPath + 'server/wwwroot'));
-//Not nice, implement asciimo: https://github.com/Marak/asciimo
-function greetings() {
-
- 
-}
 
 var serverADDR = 'N/A';
 var LogR = 0;
@@ -81,7 +79,7 @@ var Telemetry ={};
 var PID ={};
 var PIDVal;
 var ArduSys = {};
-
+var temperature;
 
 /*
  Can use a try... catch statement
@@ -138,6 +136,10 @@ Object.keys(ifaces).forEach(function (ifname) {
 
 //---------------
 
+
+    
+  
+    
 io.on('connection', function(socket){
   //socket.emit('connected', version, Telemetry);  
    
@@ -149,24 +151,30 @@ io.on('connection', function(socket){
     //Trasmit system and PID parameters
    
     //socket.emit('serverADDR', serverADDR);
-    socket.emit('connected', startMessage, serverADDR, serverPort, MJPGPort, PID);
+    socket.emit('connected', startMessage, serverADDR, serverPort, videoFeedPort, PID);
     console.log('New socket.io connection - id: %s', socket.id);
     
     //Add also the disconnection event
-    log.info('Client connected ' + socket.id);
+    log.info('Client connected ' + socket.id, startMessage, serverADDR, serverPort, videoFeedPort, PID + ' video: ' + videoWidth, videoHeight, fps);
+    
+    setTimeout(function() {
+        videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps); 
+    }, 2000);
+     
 
-  setInterval(function(){
+  /* Not needed as the info is displayed on screen
+   setInterval(function(){
   if(THReceived==1)socket.emit('status', Telemetry['yaw'], Telemetry['pitch'], Telemetry['roll'], Telemetry['bal'], Telemetry['dISTE']);
   if(Telemetry['pitch'] > 60)log.error('BALANCING FAIL! Pitch: ' + Telemetry['pitch']); 
-              console.log(Telemetry['pitch']);
+              //console.log(Telemetry['pitch']);
   }, 250);
-
+*/
   
   setInterval(function(){
 
   var usage = "N/A";
-  var temperature = fs.readFileSync("/sys/class/thermal/thermal_zone0/temp");
-temperature = ((temperature/1000).toPrecision(3)) + "°C";
+  temperature = fs.readFileSync("/sys/class/thermal/thermal_zone0/temp");
+  temperature = ((temperature/1000).toPrecision(3)) + "°C";
 
   socket.emit("CPUInfo", temperature, usage);
   }, 3 * 1000);
@@ -185,13 +193,9 @@ temperature = ((temperature/1000).toPrecision(3)) + "°C";
     });
   
     socket.on('move', function(dX, dY){
-	//console.log('event: ', dX, dY);
-	//serialPort.write('SCMD Steer ' + Math.round(dX) + '\n');
-	//serialPort.write('SCMD Throttle ' + Math.round(dY) + '\n');
-	serialPort.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
+		serialPort.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
 	
-        //log.debug('Move command SCMD ' + CMD);
-	});
+        });
     
   //Server Commands
   socket.on('SerCMD', function(CMD){  
@@ -206,7 +210,6 @@ temperature = ((temperature/1000).toPrecision(3)) + "°C";
         
     }
     else if ( CMD == "LOG_OFF" ){
-	//console.log("Log Stopped");
 	socket.emit('Info', "logging stopped");     
 	LogR = 0;
 	log.debug('Telemetry logging stopped ' + telemetryfilePath+TelemetryFN);
@@ -241,7 +244,7 @@ temperature = ((temperature/1000).toPrecision(3)) + "°C";
   }); 
   
   socket.on('connected', function(){
-    console.log('CONNECTED id: %s', socket.id);
+    //console.log('CONNECTED id: %s', socket.id);
    // log.info('Client disconnected ' + socket.id);sudo modprobe bcm2835-v4l2
   });   
   
@@ -266,10 +269,9 @@ io.on('disconnect', function () {
     });
 
 http.listen(serverPort, function(){
-console.log('listening on *: ', serverPort);
-log.info('Server listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + MJPGPort);
-
-greetings();  
+console.log('listening on *: ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
+log.info('Server listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
+ 
   
 //Read input from Arduino and stores it into a dictionary
 serialPort.on('data', function(data, socket) {	 	
@@ -416,93 +418,8 @@ We store sensor data in arrays.
 });
 
 
-
-var cv = require('opencv');
-var i = 0;
-
-var http2 = require('http');
-var fs = require('fs');
-var mjpegServer = require('./mjpeg-server');
-
-var camera = new cv.VideoCapture(0);
-//var window = new cv.NamedWindow('Video', 0)
-var imageW = 320,
-	imageH = 240;
-
-camera.setWidth(imageW);
-camera.setHeight(imageH);
-
-http2.createServer(function(req, res) {
+module.exports.Telemetry = Telemetry;
+module.exports.temperature = temperature;
+module.exports.nconf = nconf;
     
-   MJPEG.startVideoFeed(req, res); 
   
-}).listen(MJPGPort);
-
-/*
-http2.createServer(function(req, res) {
-	//console.log("Got request");
-
-	mjpegReqHandler = mjpegServer.createReqHandler(req, res);
-	var i = 0;
-	var timer = setInterval(captureImg, 100);
-
-	function captureImg() {
-		var toTransmit = "";
-		var tempFile = "";
-		camera.read(function(err, im) {
-			if (err) throw err;
-			//console.log("Image acquired: ", im.size());
-			//console.log(im.isBuffer());
-
-			var width = im.width();
-			var height = im.height();
-			var c = ["255", "130", "0"];
-			//im.rotate(180);
-			//im.convertGrayscale();
-			im.putText("f: " + i, 15, height - 10, "CV_FONT_HERSHEY_SIMPLEX", [100, 200, 50], 0.5);
-			im.putText("p:", width - 50, height - 50, "CV_FONT_HERSHEY_SIMPLEX", [100, 200, 50], 0.5);
-			im.putText("b:", width - 50, height - 30, "CV_FONT_HERSHEY_SIMPLEX", [100, 200, 50], 0.5);
-			im.putText("r:", width - 50, height - 10, "CV_FONT_HERSHEY_SIMPLEX", [100, 200, 50], 0.5);
-
-
-			
-			drawCrossHair(im);
-			if (im.size()[0] > 0 && im.size()[1] > 0) {
-
-				//toTransmit = im.toBufferAsync(sendJPGData);
-				im.toBufferAsync(sendJPGData);
-
-
-				i++;
-			}
-		});
-
-	}
-
-
-
-	
-	function sendJPGData(err, data) {
-		mjpegReqHandler.write(data, function() {});
-	}
-
-	function checkIfFinished() {
-		if (i > 100) {
-			clearInterval(timer);
-			mjpegReqHandler.close();
-			console.log('End Request');
-		}
-	}
-
-	function drawCrossHair(im)
-		{
-			im.line([im.width() / 2 - 20, im.height() / 2], [im.width() / 2 - 40, im.height() / 2])
-			im.line([im.width() / 2 + 20, im.height() / 2], [im.width() / 2 + 40, im.height() / 2])
-			im.line([im.width() / 2, im.height() / 2 - 20], [im.width() / 2, im.height() / 2- 40])
-		im.line([im.width() / 2, im.height() / 2 + 20], [im.width() / 2, im.height() / 2 + 40])
-
-	
-		}
-
-}).listen(9999);
-*/

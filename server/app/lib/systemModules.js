@@ -1,11 +1,5 @@
-var nconf = require('nconf');
-nconf.argv()
-       .env()
-       .file({ file: __dirname + '/config.json' });
 
-var nodeLib = nconf.get('server:nodeLib');
-
-var fs = require(nodeLib + 'safefs');
+var fs = require('safefs');
 
 
 /*

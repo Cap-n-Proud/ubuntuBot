@@ -34,8 +34,14 @@
     "SNimgWidth": 320,
     "SNimgHeight": 240    
   },
-  "MJPG": {
-    "MJPGPort": 9999    
+  "video": {
+    "port": 9999,
+    "videoWidth": 320,
+    "videoHeight": 240,
+    "fps": 5,
+    "crosshair": true,
+    "overlayInfo": true,
+    "onScreenColor": "[0, 255, 0]"
   }
   
 }

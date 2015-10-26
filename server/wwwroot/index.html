@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Bailey | Welcome</title>
+    <title>bot-Pi | Welcome</title>
     <meta content="yes" name="mobile-web-app-capable">
     <link href="foundation/css/foundation.css" rel="stylesheet">
     <script src="foundation/js/vendor/modernizr.js"></script>
@@ -30,7 +30,7 @@
       </section>
 
       <section class="middle tab-bar-section">
-        <h1 class="title">Bailey</h1>
+        <h1 class="title">bot-Pi</h1>
       </section>
 
       <section class="right-small">
@@ -196,7 +196,7 @@
 
 <div class="tabs-content">
   <section role="tabpanel" aria-hidden="false" class="content active" id="panel2-1">
- <iframe id="videoFeed" src="default.html" width="330" height="250" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>   
+ <iframe id="videoFeed" src="default.html" width="340" height="260" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>   
   </section>
   <section role="tabpanel" aria-hidden="true" class="content" id="panel2-2">
     
@@ -335,7 +335,7 @@
         </div>
     </div>
 
-
+<!--
     <div class="row">
         <div class="medium-3 columns">
             <i class="fa fa-laptop"></i> <span class="labelSwitch"
@@ -361,7 +361,7 @@
         </div>
     </div>
 
-
+-->
     <div class="row">
    
         <div class="medium-12 columns">
@@ -553,13 +553,12 @@ $(document).foundation();
     MJPEGPort = MJPEGPort.toString();
     
     document.getElementById("botControl").src = 'http://' + serverADDR + ':' + serverPort + '/vj';
-    document.getElementById('videoFeed').src = 'http://' + serverADDR + ':' + MJPEGPort;
+    document.getElementById('videoFeed').src = 'http://' + serverADDR + ':' + serverPort + '/video';
     document.getElementById("telemetryGPH").src = '';
     //console.log('http://' + serverADDR + ':' + MJPEGPort);
     document.getElementById("Info").innerHTML = info;
    //document.getElementById("CMD").innerHTML = 'http://' + serverADDR + ':' + serverPort + '/vj';
-    camFeedRefresh();
-    setSliders(PID);
+    //setSliders(PID);
    // document.getElementById("Info").innerHTML = server;
    
 	
@@ -589,7 +588,7 @@ $(document).foundation();
     }
 	
 	function camFeedRefresh(){
-	     document.getElementById('videoFeed').src = document.getElementById('videoFeed').src = document.getElementById("videoFeed").src = 'http://' + serverADDR + ':' + MJPEGPort;
+	   //  document.getElementById('videoFeed').src = document.getElementById('videoFeed').src = document.getElementById("videoFeed").src = 'http://' + serverADDR + ':' + serverPort + '/video';
 
 		
 	}
