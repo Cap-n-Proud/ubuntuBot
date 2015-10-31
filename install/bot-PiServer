@@ -21,8 +21,8 @@
 # Carry out specific functions when asked to by the system
 case "$1" in
   start)
-    su root -c 'sudo node /home/pi/bot-Pi/server/app/server.js'
     su root -c 'sudo modprobe bcm2835-v4l2'
+    su root -c 'sudo node /home/pi/bot-Pi/server/app/server.js'
     echo "Starting bo-Pi server"
     # Print the IP address
     _IP=$(hostname -I) || true
