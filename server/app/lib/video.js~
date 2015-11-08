@@ -96,62 +96,43 @@ function drawCrosshair(im, videoWidth, videoHeight) {
 
 
 }
-function map(x, in_min, in_max, out_min, out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-function reduce(val,base)
-{
- 
-    return val - parseInt(val/base)*base;
-}
 
 function drawCompass(im, videoWidth, videoHeight, heading) {
     var hudColor = JSON.parse(server.nconf.get('video:hudColor'));
-    var minI = 0;//videoWidth / 5,
-        maxI = 360;//(4 / 5) * videoWidth,
-        compassRange = maxI-minI;
+    var minI = videoWidth / 5,
+        maxI = (4 / 5) * videoWidth;
     var onScreenColor = JSON.parse(server.nconf.get('video:onScreenColor'));
     var fontSize = videoWidth * JSON.parse(server.nconf.get('video:fontBaseSize')) / 320;
     var compassRange = maxI - minI;
-    
-    for (i = minI; i <  maxI; i++) {
-      
-                  if (i%20==0)
-        im.line([reduce(i+heading,compassRange)+minI, - screenMargin], [reduce(i+heading,compassRange)+minI, + screenMargin + 10], hudColor);
-                  if (i%10==0)
-        im.line([reduce(i+heading,compassRange)+minI, - screenMargin], [reduce(i+heading,compassRange)+minI, + screenMargin + 5], hudColor);
-        
-        
-        if (i == map(0,0,360,minI, maxI))
-            im.putText("N", reduce(i+heading+videoWidth/2,compassRange)+minI, 25, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, 0.7*fontSize);
-        if (i == map(270,0,360,minI, maxI))
-            im.putText("E", reduce(i+heading+videoWidth/2,compassRange)+minI, 25, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, 0.7*fontSize);
-        if (i == map(180,0,360,minI, maxI))
-            im.putText("S", reduce(i+heading+videoWidth/2,compassRange)+minI, 25, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, 0.7*fontSize);
-        if (i == map(90,0,360,minI, maxI))
-            im.putText("W", reduce(i+heading+videoWidth/2,compassRange)+minI, 25, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, 0.7*fontSize);
-        drawHeading(im, videoWidth, videoHeight, heading);
-        
-    }
+    im.putText(heading, 25, 15, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
+    //im.putText(minI, 25 , 35, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, fontSize);
+    //im.putText(maxI, 25 , 55, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, fontSize);
+    //im.putText(parseInt(heading / compassRange), 25 , 85, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, fontSize);
 
-    
-    function drawHeading(im, videoWidth, videoHeight, heading)
-    {
+    //heading = heading / (maxI - minI);
+    //if (heading > compassRange)heading = heading - compassRange;
+    //compensation = heading - compassrange/2
+    /*for (i = 0; i < maxI; i+=10) {
+        if (i+heading < maxI && i+heading > minI){
+        im.line([i + heading, - screenMargin], [i + heading, + screenMargin + 10], hudColor);
         
-        var lenght = fontSize*80, height= fontSize*30;
+        if ((0 + heading +0.5*videoWidth< maxI && 0+heading +0.5*videoWidth> minI))
+        im.putText("N", 0 + heading +0.5*videoWidth, 25, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, 0.7*fontSize);
+        if ((90 + heading +0.5*videoWidth< maxI && 90+heading +0.5*videoWidth> minI))
+        im.putText("E", 90 + heading +0.5*videoWidth, 25, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, 0.7*fontSize);
         
         
-      im.line([videoWidth/2-lenght/2,+45], [videoWidth/2+lenght/2,+45], hudColor);
-      im.line([videoWidth/2-lenght/2,+45], [videoWidth/2-lenght/2,+45-height], hudColor);
-      im.line([videoWidth/2+lenght/2,+45], [videoWidth/2+lenght/2,+45-height], hudColor);
-      im.line([videoWidth/2-lenght/2,+45-height], [videoWidth/2,+45-height-8], hudColor);
-      im.line([videoWidth/2+lenght/2,+45-height], [videoWidth/2,+45-height-8], hudColor);
-      im.putText(heading, videoWidth/2-lenght/2+2*screenMargin, 45-screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
-   
-        
-    }
+        if ((-90 + heading +0.5*videoWidth< maxI && 270 + heading +0.5*videoWidth> minI))
+        im.putText("W", 90 + heading +0.5*videoWidth, 25, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, 0.7*fontSize);
+
+        if ((180 + heading +0.5*videoWidth< maxI && 180 + heading +0.5*videoWidth> minI))
+        im.putText("S", 0 + heading +0.5*videoWidth, 25, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, 0.7*fontSize);
+            
+        }               
+    }*/
+
+}
+
 function drawOverlayInfo(im, videoWidth, videoHeight, memory, fps) {
     var onScreenColor = JSON.parse(server.nconf.get('video:onScreenColor'));
     var fontSize = videoWidth * JSON.parse(server.nconf.get('video:fontBaseSize')) / 320;
