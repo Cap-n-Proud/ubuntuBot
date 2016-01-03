@@ -6,13 +6,13 @@
     "serPort": "/dev/ttyACM0",
     "version": "2",
     "nodeLib": "",
-    "SNFolder": "/home/pi/Documents/SN/",
-    "installPath": "/home/pi/bot-Pi/",
-    "logfilePath": "/home/pi/Documents/log/",
+    "SNFolder": "/home/odroid/Documents/SN/",
+    "installPath": "/home/odroid/bot-Pi/",
+    "logfilePath": "/home/odroid/Documents/log/",
     "empty":"N/A"
   },
   "telemetry": {
-    "telemetryfilePath": "/home/pi/Documents/telemetry/",
+    "telemetryfilePath": "/home/odroid/Documents/telemetry/",
     "SEPARATOR": ","    
   },
   "hardware":{
@@ -39,9 +39,9 @@
     "videoWidth": 320,
     "videoHeight": 240,
     "fps": 24,
-    "drawCrosshair": true,
+    "drawCrosshair": false,
     "drawOverlayInfo": true,
-    "drawCompass": true,
+    "drawCompass": false,
     "onScreenColor": "[0, 255, 0]",
     "fontBaseSize": "0.5",
     "hudColor": "[0, 255, 0]"
