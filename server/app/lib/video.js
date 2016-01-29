@@ -20,6 +20,7 @@ function startVideoFeed(socket, videoWidth, videoHeight, fps) {
     camera.setWidth(videoWidth);
     camera.setHeight(videoHeight);
     var camInterval = 1000 / fps;
+    //var camInterval = fps;
 
 
 
@@ -59,7 +60,7 @@ function startVideoFeed(socket, videoWidth, videoHeight, fps) {
             socket.emit('frame', {
                 buffer: im.toBuffer({
                     ext: ".jpg",
-                    jpegQuality: 80
+                    jpegQuality: 95
                 })
             });
 

@@ -13,11 +13,11 @@ var nodeLib = nconf.get('server:nodeLib');
 var logfilePath = nconf.get('server:logfilePath');
 
 var telemetryfilePath = nconf.get('telemetry:telemetryfilePath');
-var bunyan = require('bunyan');
+var bunyan = require(nodeLib + 'bunyan');
 
 //--------------- Logging middleware ---------------
 var log = bunyan.createLogger({
-  name: 'bot',
+  name: 'bot-Pi',
   streams: [
     /*{
       level: 'debug',
@@ -30,40 +30,39 @@ var log = bunyan.createLogger({
   ]
 });
 
-var fs = require('safefs');
+var fs = require(nodeLib + 'safefs');
 var SEPARATOR = nconf.get('telemetry:SEPARATOR');
 var installPath = nconf.get('server:installPath');
 var com = require('serialport');
-var express = require('express');
+var express = require('/usr/lib/node_modules/express');
 var app = express();
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var io = require(nodeLib + 'socket.io')(http);
+
 var sys = require('sys');
 var exec = require('child_process').exec;
-
 
 var serPort = nconf.get('server:serPort');
 var serBaud = nconf.get('server:serBaud');
 var serverPort = nconf.get('server:serverPort');
 var version = nconf.get('server:version');
-var videoFeedPort = nconf.get('video:port');
-var videoWidth = nconf.get('video:videoWidth');
-var videoHeight = nconf.get('video:videoHeight');
-var fps= nconf.get('video:fps');
+var videoFeedPort = nconf.get('MJPG:MJPGPort');
 
 // include custom functions ======================================================================
-var systemModules = require(installPath + 'server/app/lib/systemModules');
-var functions = require(installPath + 'server/app/lib/functions');
-var camera = require(installPath + 'server/app/lib/camera');
-var videoFeed = require(installPath + 'server/app/lib/video');
-
-
+var systemModules = require(installPath + 'server/app/systemModules');
+var functions = require(installPath + 'server/app/functions');
+var camera = require(installPath + 'server/app/camera');
 //var robot = require(installPath + 'server/app/robot');
 
 // load the routes
 require('./routes')(app);
 
 app.use(express.static(installPath + 'server/wwwroot'));
+//Not nice, implement asciimo: https://github.com/Marak/asciimo
+function greetings() {
+
+ 
+}
 
 var serverADDR = 'N/A';
 var LogR = 0;
@@ -79,7 +78,6 @@ var Telemetry ={};
 var PID ={};
 var PIDVal;
 var ArduSys = {};
-var temperature;
 
 /*
  Can use a try... catch statement
@@ -131,15 +129,8 @@ Object.keys(ifaces).forEach(function (ifname) {
   });
 });
 
-
-
-
 //---------------
 
-
-    
-  
-    
 io.on('connection', function(socket){
   //socket.emit('connected', version, Telemetry);  
    
@@ -150,31 +141,24 @@ io.on('connection', function(socket){
    serialPort.write('READ RemoteInit\n\r');
     //Trasmit system and PID parameters
    
-    //socket.emit('serverADDR', serverADDR);
+    socket.emit('serverADDR', serverADDR);
     socket.emit('connected', startMessage, serverADDR, serverPort, videoFeedPort, PID);
     console.log('New socket.io connection - id: %s', socket.id);
     
     //Add also the disconnection event
-    log.info('Client connected ' + socket.id, startMessage, serverADDR, serverPort, videoFeedPort, PID + ' video: ' + videoWidth, videoHeight, fps);
-    
-    setTimeout(function() {
-        videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps); 
-    }, 2000);
-     
+    log.info('Client connected ' + socket.id);
 
-  /* Not needed as the info is displayed on screen
-   setInterval(function(){
+  setInterval(function(){
   if(THReceived==1)socket.emit('status', Telemetry['yaw'], Telemetry['pitch'], Telemetry['roll'], Telemetry['bal'], Telemetry['dISTE']);
-  if(Telemetry['pitch'] > 60)log.error('BALANCING FAIL! Pitch: ' + Telemetry['pitch']); 
-              //console.log(Telemetry['pitch']);
+  if(Telemetry['pitch'] > 60)log.error('BALANCING FAIL! Pitch: ' + Telemetry['pitch']);            
   }, 250);
-*/
+
   
   setInterval(function(){
 
   var usage = "N/A";
-  temperature = fs.readFileSync("/sys/class/thermal/thermal_zone0/temp");
-  temperature = ((temperature/1000).toPrecision(3)) + "°C";
+  var temperature = fs.readFileSync("/sys/class/thermal/thermal_zone0/temp");
+temperature = ((temperature/1000).toPrecision(3)) + "°C";
 
   socket.emit("CPUInfo", temperature, usage);
   }, 3 * 1000);
@@ -193,9 +177,13 @@ io.on('connection', function(socket){
     });
   
     socket.on('move', function(dX, dY){
-		serialPort.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
+	//console.log('event: ', dX, dY);
+	//serialPort.write('SCMD Steer ' + Math.round(dX) + '\n');
+	//serialPort.write('SCMD Throttle ' + Math.round(dY) + '\n');
+	serialPort.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
 	
-        });
+        //log.debug('Move command SCMD ' + CMD);
+	});
     
   //Server Commands
   socket.on('SerCMD', function(CMD){  
@@ -210,6 +198,7 @@ io.on('connection', function(socket){
         
     }
     else if ( CMD == "LOG_OFF" ){
+	//console.log("Log Stopped");
 	socket.emit('Info', "logging stopped");     
 	LogR = 0;
 	log.debug('Telemetry logging stopped ' + telemetryfilePath+TelemetryFN);
@@ -243,12 +232,6 @@ io.on('connection', function(socket){
     log.info('Client disconnected ' + socket.id);
   }); 
   
-  socket.on('connected', function(){
-    //console.log('CONNECTED id: %s', socket.id);
-   // log.info('Client disconnected ' + socket.id);sudo modprobe bcm2835-v4l2
-  });   
-  
-  
     eventEmitter.on('CMDecho', function(data){
         socket.emit('CMD', data);
 
@@ -269,15 +252,16 @@ io.on('disconnect', function () {
     });
 
 http.listen(serverPort, function(){
-console.log('listening on *: ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
+console.log('listening on *: ', serverPort);
 log.info('Server listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
- 
+
+greetings();  
   
 //Read input from Arduino and stores it into a dictionary
 serialPort.on('data', function(data, socket) {	 	
 /*
 We store sensor data in arrays.
-0/ send command via serial to provide data
+0/ send command via seiral to provide data
 1/ check what are we receiving (first letter of the trnasmission)
 2/ populate the correct variable
 
@@ -416,10 +400,3 @@ We store sensor data in arrays.
 });
  
 });
-
-
-module.exports.Telemetry = Telemetry;
-module.exports.temperature = temperature;
-module.exports.nconf = nconf;
-    
-  

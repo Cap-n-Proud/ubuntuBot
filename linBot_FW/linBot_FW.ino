@@ -4,23 +4,14 @@
 //------------------ Libraries ------------------
 
 //#define DEBUG
-#include "DebugUtils.h"
-#include "CommunicationUtils.h"
-#include "FreeIMU.h"
 #include <Wire.h>
-#include <SPI.h>
+//#include <SPI.h>
 #include <I2Cdev.h>
-#include <MPU60X0.h>
-#define M_PI 3.14159265358979323846f
-  #include <MS561101BA.h>
-#include <HMC58X3.h>
 #include <Wire.h> // for i2c
 
 #include <TimedAction.h> // for updating sensors and debug http://bit.ly/pATDBi http://playground.arduino.cc/Code/TimedAction
 #include <EEPROM.h> // for storing configuraion
 //#include <avr/wdt.h> // watchdog http://savannah.nongnu.org/projects/avr-libc/
-#include <KalmanFilter.h> // github.com/nut-code-monkey/KalmanFilter-for-Arduino
-                          // Try also: https://github.com/TKJElectronics/KalmanFilter.git
 #include <AccelStepper.h> //https://github.com/adafruit/AccelStepper.git
 
 #define SERIALCOMMAND_HARDWAREONLY 1
@@ -29,6 +20,7 @@
 //------------------ Constants ------------------ 
 #define TO_RAD(x) (x * 0.01745329252)  // *pi/180
 #define TO_DEG(x) (x * 57.2957795131)  // *180/pi
+#define M_PI 3.14159265358979323846f
 #define speedMultiplier 1
 #define SERIAL_BAUD 38400
 #define CONFIG_START 32 //EEPROM address to start the config
@@ -77,77 +69,68 @@ byte b[sizeof(Configuration)];
 
 double UserControl[1]; //Steer, Throttle
 
-void setConfiguration(boolean force) {
-  /* Flash is erased every time new code is uploaded. Write the default configuration to flash if first time */
-  // running for the first time?
-  uint8_t codeRunningForTheFirstTime = EEPROM.read(CONFIG_START); // flash bytes will be 255 at first run
-  if (codeRunningForTheFirstTime || force) {
-    if (configuration.debug){
-      Serial.print("No config found, defaulting ");
-    }
-    /* First time running, set defaults */
-    configuration.FirmwareVersion = "0.8";
-    //If we are testing the IMU is disabled and only random numbers are generated.
-    configuration.test = 0;
-    configuration.Rin1Pin=4;
-    configuration.Rin2Pin=5;
-    configuration.Rin3Pin=6;
-    configuration.Rin4Pin=7;
-    configuration.Lin1Pin=8;
-    configuration.Lin2Pin=9;
-    configuration.Lin3Pin=10;
-    configuration.Lin4Pin=11;
-    configuration.stepsPerRev=200;
-    configuration.maxSpeed=300;
-    configuration.maxAcc = 25;
-    
-    configuration.steerGain = 0.7;
-    configuration.throttleGain = 1;
-    configuration.Maxsteer = 100; //Max allowed percentage difference. Up to the remote to provide the right scale.  
-    configuration.Maxthrottle = 100; //Max speed expressed in inclination degrees. Up to the remote to provide the right scale.
-        
-    configuration.motorsON = 0;
-    configuration.telemetryPrecision = 3;
-  
-    configuration.debug = 0;
-  
-    configuration.commandDelay = 5;
-  
-    configuration.debugLevel = 0;
-    configuration.debugSampleRate = 1000;
-    //  configuration.speedPIDSetpointDebug = 1;
-    configuration.speedPIDOutputDebug = 1;
-    configuration.speedPIDInputDebug = 1;
-    configuration.speedKalmanFilterDebug = 1;
-    configuration.speedRawDebug = 1;
-    configuration.speedMovingAvarageFilter2Debug = 0;
-    configuration.anglePIDSetpointDebug = 1;
-    configuration.anglePIDInputDebug = 1;
-    configuration.anglePIDOutputDebug = 1;
-    configuration.angleRawDebug = 1;
-    configuration.activePIDTuningDebug = 1;
-    //configuration.speakerPin = 13;
-    
-    saveConfig();
-    delay(100);
-  }
-  else {
-    if (configuration.debug)
-      Serial.println("Config found");
-    loadConfig();
-  }
-};
+
 
 
 
 String SEPARATOR = ","; //Used as separator for telemetry
-float ypr[3];
 float altimeter;
 float heading = 0;
 
 
-// Set the FreeIMU object
-FreeIMU my3IMU = FreeIMU();
+//------------------ IMU ------------------
+
+#include "MPU6050_6Axis_MotionApps20.h"
+//#include "MPU6050.h" // not necessary if using MotionApps include file
+
+// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
+// is used in I2Cdev.h
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+    #include "Wire.h"
+#endif
+
+// class default I2C address is 0x68
+// specific I2C addresses may be passed as a parameter here
+// AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
+// AD0 high = 0x69
+MPU6050 mpu;
+//MPU6050 mpu(0x69); // <-- use for AD0 high
+
+
+// MPU control/status vars
+bool dmpReady = false;  // set true if DMP init was successful
+uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
+uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
+uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
+uint16_t fifoCount;     // count of all bytes currently in FIFO
+uint8_t fifoBuffer[64]; // FIFO storage buffer
+
+// orientation/motion vars
+Quaternion q;           // [w, x, y, z]         quaternion container
+VectorInt16 aa;         // [x, y, z]            accel sensor measurements
+VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
+VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
+VectorFloat gravity;    // [x, y, z]            gravity vector
+float euler[3];         // [psi, theta, phi]    Euler angle container
+float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+
+
+// packet structure for InvenSense teapot demo
+uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
+
+
+
+// ================================================================
+// ===               INTERRUPT DETECTION ROUTINE                ===
+// ================================================================
+
+volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
+void dmpDataReady() {
+    mpuInterrupt = true;
+}
+
+
+
 
 
 int StartL, LoopT;
@@ -173,7 +156,7 @@ TimedAction debugTimedAction = TimedAction(configuration.debugSampleRate, debugE
 //TimedAction remoteControlWatchdogTimedAction = TimedAction(5000, stopRobot);
 
 //Reads serial for commands
-TimedAction RemoteReadTimedAction = TimedAction(250, RemoteRead);
+TimedAction RemoteReadTimedAction = TimedAction(150, RemoteRead);
 
 //  TimedAction ReadIMUTimedAction = TimedAction(100, ReadIMUTEST);
   TimedAction ReadIMUTimedAction = TimedAction(100, ReadIMU);
@@ -181,21 +164,29 @@ TimedAction RemoteReadTimedAction = TimedAction(250, RemoteRead);
 
 
 //Upload telemetry data
-TimedAction TelemetryTXTimedAction = TimedAction(250, TelemetryTX);
+TimedAction TelemetryTXTimedAction = TimedAction(150, TelemetryTX);
 
 
 //------------------ Setup ------------------ 
 void setup() { 
-  //pinMode(configuration.speakerPin, OUTPUT);
-   randomSeed(analogRead(0));
+    // join I2C bus (I2Cdev library doesn't do this automatically)
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+        Wire.begin();
+        TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties with TWBR.
+    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+        Fastwire::setup(400, true);
+    #endif
+  
+
+
+
   Serial.begin(SERIAL_BAUD);
   delay(50);
-  Serial.println("Initializing ...");
+  //Serial.println("Initializing ...");
   // Load config from eeprom
   setConfiguration(true);
   // init i2c and IMU
   delay(100);
-  Wire.begin();
   UserControl[0]=0;
   UserControl[1]=0;
   
@@ -212,9 +203,6 @@ void setup() {
   my3IMU.init(); // the parameter enable or disable fast mode
   delay(5);
   }*/
-  delay(5);
-  my3IMU.init(); // the parameter enable or disable fast mode
-  delay(5);
   // Setup callbacks for SerialCommand commands 
   SCmd.addCommand("SCMD", setCommand);       
   SCmd.addCommand("READ", printCommand); 
@@ -230,7 +218,8 @@ void loop() {
 
   
   //updateMotorStatusesTimedAction.check();
-  ReadIMUTimedAction.check();
+ // ReadIMUTimedAction.check();
+ ReadIMU();
   RemoteReadTimedAction.check();
   TelemetryTXTimedAction.check();
   //updateMotorSpeedTimedAction.check();
@@ -269,11 +258,63 @@ void ReadIMUTEST() {
 
 
 void ReadIMU() {
-  my3IMU.getYawPitchRoll(ypr);
-   if(ypr[0] < 0) ypr[0] = ypr[0] + 4*90;
-  if(ypr[0] > 4*90) ypr[0] = ypr[0] + 4*90;
-  altimeter = my3IMU.getBaroAlt();  
-  //Serial.println(ypr[0]);
-  
+ if (!dmpReady) return;
+
+    // wait for MPU interrupt or extra packet(s) available
+    while (!mpuInterrupt && fifoCount < packetSize) {
+        // other program behavior stuff here
+        // .
+        // .
+        // .
+        // if you are really paranoid you can frequently test in between other
+        // stuff to see if mpuInterrupt is true, and if so, "break;" from the
+        // while() loop to immediately process the MPU data
+        // .
+        // .
+        // .
+    }
+
+       // reset interrupt flag and get INT_STATUS byte
+    mpuInterrupt = false;
+    mpuIntStatus = mpu.getIntStatus();
+
+    // get current FIFO count
+    fifoCount = mpu.getFIFOCount();
+
+    // check for overflow (this should never happen unless our code is too inefficient)
+    if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
+        // reset so we can continue cleanly
+        mpu.resetFIFO();
+        Serial.println(F("FIFO overflow!"));
+
+    // otherwise, check for DMP data ready interrupt (this should happen frequently)
+    } else if (mpuIntStatus & 0x02) {
+        // wait for correct available data length, should be a VERY short wait
+        while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+
+        // read a packet from FIFO
+        mpu.getFIFOBytes(fifoBuffer, packetSize);
+        
+        // track FIFO count here in case there is > 1 packet available
+        // (this lets us immediately read more without waiting for an interrupt)
+        fifoCount -= packetSize;
+
+                    // display Euler angles in degrees
+            mpu.dmpGetQuaternion(&q, fifoBuffer);
+            mpu.dmpGetGravity(&gravity, &q);
+            mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+            
+            for(int i=0;i<3;i++){
+             ypr[i] = TO_DEG(ypr[i]); 
+            }
+           /* Serial.print("ypr\t");
+            Serial.print(ypr[0] * 180/M_PI);
+            Serial.print("\t");
+            Serial.print(ypr[1] * 180/M_PI);
+            Serial.print("\t");
+            Serial.println(ypr[2] * 180/M_PI);
+*/
+    }
+
 }
 
