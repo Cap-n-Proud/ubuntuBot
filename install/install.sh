@@ -29,32 +29,23 @@ EOT
 
 asd
 
-echo -n "Want to confgure RaspberryPi? [Y/N]"
-read BUILDUP
+
+echo -e "***** Setting up  bot server *****"
+sudo cp bot-Server /etc/init.d/bot-Server
+sudo chmod 0755 /etc/init.d/bot-Server
+sudo update-rc.d bot-Server defaults
+
+mkdir /home/$USER/Documents
+sudo chmod 0755 /home/$USER/Documents
+
+mkdir /home/$USER/Documents/bot
+sudo chmod 0755 /home/$USER/Documents/bot
+
+mkdir /home/$USER/Documents/log/
+sudo chmod 0755 /home/$USER/Documents/log/
 
 
-if [ "$BUILDUP" == "Y" ]
-then
-  git clone https://github.com/pfnegrini/BuildUP.git /home/pi/BuildUP
-  sudo bash /home/pi/BuildUP/RPi-init.sh
-fi
-
-echo -e "***** Setting up  bot-Pi server *****"
-sudo cp bot-PiServer /etc/init.d/bot-PiServer
-sudo chmod 0755 /etc/init.d/bot-PiServer
-sudo update-rc.d bot-PiServer defaults
-
-mkdir /home/pi/Documents
-sudo chmod 0755 /home/pi/Documents
-
-mkdir /home/pi/Documents/bot-Pi
-sudo chmod 0755 /home/pi/Documents/bot-Pi
-
-mkdir /home/pi/Documents/log/
-sudo chmod 0755 /home/pi/Documents/log/
-
-
-cd /home/pi/bot-Pi/server/app
+cd /home/$USER/bot/server/app
 npm install
 
 exit 0

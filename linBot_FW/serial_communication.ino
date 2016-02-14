@@ -42,21 +42,12 @@ void TelemetryTX()
   String line = "";
   String line2="";
   if (!configuration.debug) {
-  //  char ypr0[6], ypr1[6], ypr2[6], headingBuff[6], altBuff[6];
-  
+    char ypr0[6], ypr1[6], ypr2[6], headingBuff[6], altBuff[6];
   String telemMarker ="T";
     //Need to calculate parameters here because the main loop has a different frequency
     TxLoopTime = millis()-TxLoopTime;
-   char buffer[10], buffer1[10], buffer2[10], buffer3[10], buffer4[10], buffer5[10];
-   line = "T" + SEPARATOR   
-     + dtostrf(ypr[0], 3, configuration.telemetryPrecision, buffer)+ SEPARATOR
-     + dtostrf(ypr[1], 3, configuration.telemetryPrecision, buffer1) + SEPARATOR
-     + dtostrf(ypr[2], 3, configuration.telemetryPrecision, buffer2) + SEPARATOR
-     + dtostrf(heading, 3, configuration.telemetryPrecision, buffer3) + SEPARATOR
-     + dtostrf(altimeter, 3, configuration.telemetryPrecision, buffer4) + SEPARATOR
-     + LoopT;
-      
-  /* 
+    
+   
   String line = telemMarker + SEPARATOR + 
         dtostrf(ypr[0],1,2,ypr0) +  SEPARATOR + 
         dtostrf(ypr[1],1,2,ypr1) +  SEPARATOR + 
@@ -67,8 +58,8 @@ void TelemetryTX()
         "N/A" +  SEPARATOR +
         dtostrf(altimeter,1,2,altBuff) +  SEPARATOR +
         LoopT;
-*/
-Serial.println(line); 
+
+Serial.println(line + line2); 
     
     /*line = "T" + SEPARATOR
            + yaw + SEPARATOR

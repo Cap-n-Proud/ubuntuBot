@@ -30,7 +30,7 @@ void motorsSetup() {
   
   motorR.setAcceleration(configuration.maxAcc);
   motorL.setAcceleration(configuration.maxAcc); 
-  //Serial.println("Motor setup completed");
+  Serial.println("Motor setup completed");
   
 }
 
