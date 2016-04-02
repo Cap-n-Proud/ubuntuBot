@@ -11,18 +11,18 @@ module support(D1,H1, D2, H2, offsetval, tolerance)
     difference()
     {
         union(){
-            cylinder(r=2.5*(D1/2), h=H1, center=false);
-    translate([offsetval,0,H1])cylinder(r=2.5*(D2/2), h=H2, center=false);
+            cylinder(r=2.5*(D1/2)+0.1*H1, h=H1, center=false);
+    translate([offsetval,0,H1])cylinder(r=2.5*(D1/2)+0.1*H2, h=H2, center=false);
              translate([0,0,H1-(H1+H2)/6])
 hull()
         {
-         cylinder(r=2.5*(D1/2), h=(H1+H2)/3, center=false);
-          translate([offsetval,0,0])cylinder(r=2.5*(D2/2), h=(H1+H2)/3, center=false);   
+         cylinder(r=2.5*(D2/2)+0.1*H2, h=(H1+H2)/3, center=false);
+          translate([offsetval,0,0])cylinder(r=2.5*(D2/2)+0.1*H2, h=(H1+H2)/3, center=false);   
             
         }    
             }
         cylinder(r=D1/2+tolerance, h=3*H1, center=false);
-         translate([offsetval,0,H1-(H1+H2)/3])cylinder(r=D2/2+tolerance, h=3*H2, center=false);
+         translate([offsetval,0,H1-(H1+H2)/2])cylinder(r=D2/2+tolerance, h=3*H2, center=false);
     }
    
 }
@@ -85,7 +85,7 @@ translate([35,35,0])support(2,25, 2, 5, 14.5);
 translate([0,35,0])support(2,25, 2, 5, 15.75);
 */
 //washer(3);
-support(3,10, 0, 0, 0,0.3);
-translate([35,0,0])support(3,3, 0, 0, 0, 0.3);
+//support(3,10, 0, 0, 0,0.3);
+translate([35,0,0])support(2.5,0, 2.5, 15, 15, 0.0);
 //translate([35,35,0])support(3,40, 0, 0, 0);
 //translate([0,35,0])support(3,40, 0, 0, 0);
