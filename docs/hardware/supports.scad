@@ -5,26 +5,24 @@ stackZ=45;
 stackDistance=101.5;
 T=0.05;
 
-
-module support(D1,H1, D2, H2, offsetval, tolerance)
+module support(D1,H1, D1H, D2, H2, D2H, offsetval, tolerance)
 {
-    //here tolerance is added as
     difference()
     {
         union(){
-            cylinder(r=2.5*(D1/2)+0.1*H1, h=H1, center=false);
-    translate([offsetval,0,H1])cylinder(r=2.5*(D2/2)+0.1*H2, h=H2, center=false);
+            cylinder(r=(D1/2), h=H1, center=false);
+    translate([offsetval,0,H1])cylinder(r=(D2/2), h=H2, center=false);
              translate([0,0,H1-(H1+H2)/6])
 hull()
         {//Connecition
-         cylinder(r=2.5*(D2/2)+0.1*H2, h=(H1+H2)/3, center=false);
-          translate([offsetval,0,0])cylinder(r=2.5*(D2/2)+0.1*H2, h=(H1+H2)/3, center=false);   
+         cylinder(r=(D1/2), h=(H1+H2)/3, center=false);
+          translate([offsetval,0,0])cylinder(r=D2/2, h=(H1+H2)/3, center=false);   
             
         }    
             }
             //Holes
-        cylinder(r=D1/2+tolerance, h=3*H1, center=false);
-         translate([offsetval,0,H1-(H1+H2)/2])cylinder(r=D2/2+tolerance, h=3*H2, center=false);
+        cylinder(r=D1H/2+tolerance, h=3*H1, center=false);
+         translate([offsetval,0,H1-(H1+H2)/2])cylinder(r=D2H/2+tolerance, h=3*H2, center=false);
     }
    
 }
