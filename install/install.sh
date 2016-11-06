@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# to download the latest repository: 
-#git clone https://github.com/pfnegrini/bot-Pi.git /home/pi/bot-Pi
-
 asd() {
 cat <<"EOT"
 
@@ -45,7 +42,7 @@ mkdir /home/$USER/Documents/log/
 sudo chmod 0755 /home/$USER/Documents/log/
 
 
-cd /home/$USER/bot/server/app
+cd /home/$USER/ubuntuBot/server/app
 npm install
 
 exit 0

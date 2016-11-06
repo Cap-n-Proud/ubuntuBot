@@ -21,7 +21,7 @@
 # Carry out specific functions when asked to by the system
 case "$1" in
   start)
-    su root -c 'sudo node /home/$USER/bot/server/app/server.js'
+    su root -c 'sudo node /home/$USER/ubuntuBot/server/app/server.js'
     echo "Starting bot server"
     # Print the IP address
     _IP=$(hostname -I) || true
