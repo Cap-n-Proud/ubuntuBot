@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Parse data from the json config file
-remoteRepository="https://github.com/pfnegrini/bot-Pi.git"
+remoteRepository="https://github.com/pfnegrini/ubuntuBot.git"
 installPath="$(ruby -rjson -e 'j = JSON.parse(File.read("/home/pi/bot-Pi/server/app/config.json")); puts j["server"]["installPath"]')"
 #Check installed release from config file
 installedVersion="$(ruby -rjson -e 'j = JSON.parse(File.read("/home/pi/bot-Pi/server/app/config.json")); puts j["server"]["version"]')"
