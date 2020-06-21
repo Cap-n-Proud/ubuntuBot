@@ -1,13 +1,13 @@
 #https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/
 echo -e "***** Setting up  OpenCV *****"
 sudo apt-get update && sudo apt-get upgrade
-sudo apt-get install build-essential cmake unzip pkg-configsudo apt-get install libjpeg-dev libpng-dev libtiff-dev
-sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
-sudo apt-get install libxvidcore-dev libx264-dev
-sudo apt-get install libgtk-3-dev
-sudo apt-get install libcanberra-gtk*
-sudo apt-get install libatlas-base-dev gfortran
-sudo apt-get install python3-dev
+sudo apt-get install -y build-essential cmake unzip pkg-configsudo apt-get install libjpeg-dev libpng-dev libtiff-dev
+sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+sudo apt-get install -y libxvidcore-dev libx264-dev
+sudo apt-get install -y libgtk-3-dev
+sudo apt-get install -y libcanberra-gtk*
+sudo apt-get install -y libatlas-base-dev gfortran
+sudo apt-get install -y python3-dev
 
 cd ~
 wget -O opencv.zip https://github.com/opencv/opencv/archive/4.0.0.zip
