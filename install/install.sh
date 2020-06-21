@@ -29,6 +29,10 @@ asd
 
 echo -e "***** Setting up  bot server *****"
 sudo apt full-upgrade -y
+sudo apt-get purge wolfram-engine
+sudo apt-get purge libreoffice*
+sudo apt-get clean
+sudo apt-get autoremove
 sudo apt-get install -y nano git wget nodejs tightvncserver xrdp cmake libtiff-dev 
 sudo cp bot-Server /etc/init.d/bot-Server
 sudo chmod 0755 /etc/init.d/bot-Server
