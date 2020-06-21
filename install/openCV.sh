@@ -1,4 +1,4 @@
-
+#https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/
 echo -e "***** Setting up  OpenCV *****"
 sudo apt-get install -y build-essential cmake pkg-config
 sudo apt-get install -y libjpeg8-dev libtiff4-dev libjasper-dev libpng12-dev
