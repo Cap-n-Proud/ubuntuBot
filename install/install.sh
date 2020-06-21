@@ -29,7 +29,7 @@ asd
 
 echo -e "***** Setting up  bot server *****"
 sudo apt full-upgrade -y
-sudo apt-get install -y nano git wget nodejs tightvncserver xrdp
+sudo apt-get install -y nano git wget nodejs tightvncserver xrdp cmake
 sudo cp bot-Server /etc/init.d/bot-Server
 sudo chmod 0755 /etc/init.d/bot-Server
 sudo update-rc.d bot-Server defaults
