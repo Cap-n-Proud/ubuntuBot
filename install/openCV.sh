@@ -34,4 +34,6 @@ $ cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D BUILD_EXAMPLES=OFF ..
  #increase swap file $ sudo nano /etc/dphys-swapfile
  
- make -j4
+make -j4
+sudo make install
+sudo ldconfig
