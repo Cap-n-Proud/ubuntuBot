@@ -12,7 +12,7 @@
 	"serialport": "1.x.x",
 	"safefs": "4.x.x",
 	"socket.io": "1.x.x",
-	"opencv": "x.x.x"
+	"opencv4nodejs": "x.x.x"
 	},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
