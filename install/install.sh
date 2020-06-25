@@ -37,6 +37,7 @@ sudo apt-get install -y nano git wget nodejs tightvncserver xrdp cmake libtiff-d
 sudo cp bot-Server /etc/init.d/bot-Server
 sudo chmod 0755 /etc/init.d/bot-Server
 sudo update-rc.d bot-Server defaults
+#curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 
 mkdir /home/$USER/Documents
 sudo chmod 0755 /home/$USER/Documents
