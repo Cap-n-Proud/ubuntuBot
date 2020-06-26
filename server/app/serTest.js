@@ -1,9 +1,8 @@
 const SerialPort = require('serialport')
-const port = new SerialPort('/dev/ttyACM0')
-const Readline = require('@serialport/parser-readline')
-const ByteLength = require('@serialport/parser-byte-length')
-const parser = port.pipe(new Readline({ delimiter: '\r\n' }))
-
+const serialPort = new SerialPort(serPort, {
+  baudrate: serBaud,
+  parser: com.parsers.readline('\n')
+});
 
 port.write('main screen turn on', function(err) {
   if (err) {
@@ -34,4 +33,4 @@ port.on('error', function(err) {
 // Pipe the data into another stream (like a parser or standard out)
 //const lineStream = port.pipe(new Readline())
 //const parser = port.pipe(new Readline({ delimiter: '\r\n' }))
-parser.on('data', console.log)
+serialPort.on('data', console.log)

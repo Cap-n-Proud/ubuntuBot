@@ -90,19 +90,19 @@ try {
 } catch(error) {
   console.log("Port not ready/doesn't exist!");
 }
-*/ 
+*/
 
 var serialPort = new com.SerialPort(serPort, {
   baudrate: serBaud,
   parser: com.parsers.readline('\n')
   });
-  
+
 
 serialPort.on('open',function() {
   console.log('Arduino connected on '+ serPort + ' @' + serBaud);
-  
-    
-  
+
+
+
 });
 
 
@@ -137,39 +137,39 @@ Object.keys(ifaces).forEach(function (ifname) {
 //---------------
 
 
-    
-  
-    
+
+
+
 io.on('connection', function(socket){
-  //socket.emit('connected', version, Telemetry);  
-   
+  //socket.emit('connected', version, Telemetry);
+
     var myDate = new Date();
-   
+
    var startMessage = 'Connected ' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds()+ ' v' + version + ' @' + serverADDR;
   //Init the heades for telemtry data
    serialPort.write('READ RemoteInit\n\r');
     //Trasmit system and PID parameters
-   
+
     //socket.emit('serverADDR', serverADDR);
     socket.emit('connected', startMessage, serverADDR, serverPort, videoFeedPort, PID);
     console.log('New socket.io connection - id: %s', socket.id);
-    
+
     //Add also the disconnection event
     log.info('Client connected ' + socket.id, startMessage, serverADDR, serverPort, videoFeedPort, PID + ' video: ' + videoWidth, videoHeight, fps);
-    
+
     setTimeout(function() {
-        videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps); 
+        videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps);
     }, 2000);
-     
+
 
   /* Not needed as the info is displayed on screen
    setInterval(function(){
   if(THReceived==1)socket.emit('status', Telemetry['yaw'], Telemetry['pitch'], Telemetry['roll'], Telemetry['bal'], Telemetry['dISTE']);
-  if(Telemetry['pitch'] > 60)log.error('BALANCING FAIL! Pitch: ' + Telemetry['pitch']); 
+  if(Telemetry['pitch'] > 60)log.error('BALANCING FAIL! Pitch: ' + Telemetry['pitch']);
               //console.log(Telemetry['pitch']);
   }, 250);
 */
-  
+
   setInterval(function(){
 
   var usage = "N/A";
@@ -178,12 +178,12 @@ io.on('connection', function(socket){
 
   socket.emit("CPUInfo", temperature, usage);
   }, 3 * 1000);
- 
+
   socket.on('Video', function(Video){
    socket.emit('CMD', Video);
     function puts(error, stdout, stderr) { sys.puts(stdout) }
     exec('sudo bash ' + installPath + 'server/app/bin/' + Video, puts);
-        
+
     });
 
   //Set commands goes to Arduino directly
@@ -191,33 +191,33 @@ io.on('connection', function(socket){
     serialPort.write('SCMD ' + CMD + '\n');
     log.debug('Command SCMD ' + CMD);
     });
-  
+
     socket.on('move', function(dX, dY){
 		serialPort.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
-	
+
         });
-    
+
   //Server Commands
-  socket.on('SerCMD', function(CMD){  
-    socket.emit('CMD', CMD);    
+  socket.on('SerCMD', function(CMD){
+    socket.emit('CMD', CMD);
     if ( CMD == "LOG_ON" && !LogR) {
-      TelemetryFN = 'Telemetry_' + systemModules.timeStamp() + '.csv'; 
+      TelemetryFN = 'Telemetry_' + systemModules.timeStamp() + '.csv';
       socket.emit('Info', telemetryfilePath+TelemetryFN)
       log.debug('Telemetry logging started ' + telemetryfilePath + TelemetryFN);
-      
+
       systemModules.setTelemetryFile(telemetryfilePath, TelemetryFN, TelemetryHeader, PIDHeader, SEPARATOR);
        LogR = 1;
-        
+
     }
     else if ( CMD == "LOG_OFF" ){
-	socket.emit('Info', "logging stopped");     
+	socket.emit('Info', "logging stopped");
 	LogR = 0;
 	log.debug('Telemetry logging stopped ' + telemetryfilePath+TelemetryFN);
     }
     else if ( CMD == "showConfig" ){
         fs.readFile(__dirname + '/config.json', 'utf8', function (err, json) {
-        if (err) throw err;        
-	socket.emit('configSent', json);            
+        if (err) throw err;
+	socket.emit('configSent', json);
         });
     }
   });
@@ -235,46 +235,46 @@ io.on('connection', function(socket){
     log.info('Bailey going down for maintenance now!');
     function puts(error, stdout, stderr) { sys.puts(stdout) }
     exec('sudo shutdown now');
-    
+
   });
-  
+
   socket.on('disconnect', function(){
     console.log('Disconnected id: %s', socket.id);
     log.info('Client disconnected ' + socket.id);
-  }); 
-  
+  });
+
   socket.on('connected', function(){
     //console.log('CONNECTED id: %s', socket.id);
    // log.info('Client disconnected ' + socket.id);sudo modprobe bcm2835-v4l2
-  });   
-  
-  
+  });
+
+
     eventEmitter.on('CMDecho', function(data){
         socket.emit('CMD', data);
 
-  }); 
- 
+  });
+
     eventEmitter.on('serialData', function(data){
         socket.emit('serialData', data);
 
-  }); 
- 
+  });
+
 });
 
 io.on('disconnect', function () {
-        console.log('A socket with sessionID ' + hs.sessionID 
+        console.log('A socket with sessionID ' + hs.sessionID
             + ' disconnected!');
-	log.info('A socket with sessionID ' + hs.sessionID 
+	log.info('A socket with sessionID ' + hs.sessionID
             + ' disconnected!');
     });
 
 http.listen(serverPort, function(){
 console.log('listening on *: ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
 log.info('Server listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
- 
-  
+
+
 //Read input from Arduino and stores it into a dictionary
-serialPort.on('data', function(data, socket) {	 	
+serialPort.on('data', function(data, socket) {
 /*
 We store sensor data in arrays.
 0/ send command via serial to provide data
@@ -289,28 +289,28 @@ We store sensor data in arrays.
         //console.log(data);
         if (data.indexOf('SCMD') !== -1)
 	{
-          eventEmitter.emit('CMDecho', data);  
+          eventEmitter.emit('CMDecho', data);
         }
-            
+
         if (data.indexOf('T') !== -1)
 	{
 	  var tokenData = data.split(SEPARATOR);
 	  var j = 0;
-	  
+
 	  for (var i in Telemetry) {
 	    Telemetry[i] = tokenData[j];
 	    j++;
 	    //console.log(i + ' ' + Telemetry[i]);
 	  }
 	  j = 0;
-	  
+
 	  //eventEmitter.emit('log', data);
-	  
+
 	  if (LogR == 1){
 	    systemModules.addTelemetryRow(telemetryfilePath, TelemetryFN, TelemetryHeader, data, PIDHeader, PIDVal, SEPARATOR)
 	  }
 	}
-	
+
 	//"TH" means we are receiving Telemetry Headers
         if (data.indexOf('TH') !== -1)
 	{
@@ -320,11 +320,11 @@ We store sensor data in arrays.
 	    Telemetry[TelemetryHeader[i]] = "N/A";
 	    //console.log(TelemetryHeader[i]);
           }
-        
+
           THReceived=1;
 	  //eventEmitter.emit('log', data);
 	}
-	
+
 	if (data.indexOf('SYSH') !== -1)
 	{
 	  ArduSysHeader = data.split(SEPARATOR);
@@ -335,16 +335,16 @@ We store sensor data in arrays.
 	}
             setTimeout(function () {
          	   serialPort.write('READ SYSParamTX\n\r');
-        
+
             }, 100)
-	 
+
         }
-	
+
 	if (data.indexOf('SYS') !== -1)
 	{
 	  var tokenData = data.split(SEPARATOR);
 	  var j = 0;
-	  
+
 	  for (var i in Telemetry) {
 	    ArduSys[i] = tokenData[j];
 	    j++;
@@ -353,13 +353,13 @@ We store sensor data in arrays.
 	  j = 0;
 	  //eventEmitter.emit('log', data);
 	}
-	
+
         if (data.indexOf('PID') !== -1)
 	{
 	  var tokenData = data.split(SEPARATOR);
 	  var j = 0;
           PIDVal = "";
-          
+
 	  for (var i in PID) {
 	    PID[i] = tokenData[j];
             //PIDVal is used as a string to be concatenated in log file
@@ -370,7 +370,7 @@ We store sensor data in arrays.
 	  //log.info('PID values changed ' + PIDHeader + '\n' + PIDVal);
 
 	}
-	
+
         if (data.indexOf('PIDH') !== -1)
 	{
           PIDHeader = data.split(SEPARATOR);
@@ -383,7 +383,7 @@ We store sensor data in arrays.
                 serialPort.write('READ PIDParamTX\n\r');
             }, 100);
         }
-	
+
 	//Change the first word to be 'ArduConfig'
 	//If the first word is '***' prints in the server console. Used to debug the config from Arduino
 	if (data.indexOf('***') !== -1)
@@ -392,14 +392,14 @@ We store sensor data in arrays.
 	  log.info('Configuration received from Arduino: ' + data);
 
 	}
-	
+
 	//Handle errors from Arduino
 	if (data.indexOf('E') !== -1)
 	{
           log.error('ERROR: ' + data);
         }
-	  
-	
+
+
 	//IS THIS SILL RELEVANT?
 	//Get the header for the object that stores telemetry data
 	if (data.indexOf('HEADER') !== -1)
@@ -411,15 +411,13 @@ We store sensor data in arrays.
 	    //console.log(TelemetryHeader[i]);
 	  }
 	}
-	
-	
+
+
 });
- 
+
 });
 
 
 module.exports.Telemetry = Telemetry;
 module.exports.temperature = temperature;
 module.exports.nconf = nconf;
-    
-  
