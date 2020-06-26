@@ -16,7 +16,7 @@ port.write('main screen turn on', function(err) {
 port.on('error', function(err) {
   console.log('Error: ', err.message)
 })
-
+//dsdsds
 // Read data that is available but keep the stream in "paused mode"
 //port.on('readable', function () {
 
