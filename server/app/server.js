@@ -91,20 +91,22 @@ try {
 */
 
 
-var com = require('serialport');
 
-var serialPort = new com.SerialPort(serPort, {
-  baudrate: serBaud,
-  parser: com.parsers.readline('\n')
-  });
-
-
-serialPort.on('open',function() {
-  console.log('Arduino connected on '+ serPort + ' @' + serBaud);
-
-
-
+const com = require('serialport')
+const Readline = require('@serialport/parser-readline')
+const sPort = new com(serPort,{
+  baudRate: Number(serPort)
 });
+
+const serialPort = sPort.pipe(new Readline({ delimiter: '\r\n' }))
+
+
+sPort.on('open',function() {
+  console.log('Arduino connected on '+ serPort + ' @' + serBaud)
+})
+
+serialPort.on('data', console.log)
+
 
 
 //Get IP address http://stackoverflow.com/questions/3653065/get-local-ip-address-in-node-js
