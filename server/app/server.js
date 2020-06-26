@@ -33,7 +33,6 @@ var log = bunyan.createLogger({
 var fs = require('safefs');
 var SEPARATOR = nconf.get('telemetry:SEPARATOR');
 var installPath = nconf.get('server:installPath');
-var com = require('serialport');
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
@@ -91,6 +90,9 @@ try {
   console.log("Port not ready/doesn't exist!");
 }
 */
+
+
+var com = require('serialport');
 
 var serialPort = new com.SerialPort(serPort, {
   baudrate: serBaud,
