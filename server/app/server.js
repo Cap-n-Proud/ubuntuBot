@@ -32,6 +32,7 @@ var log = bunyan.createLogger({
 var fs = require('safefs');
 var SEPARATOR = nconf.get('telemetry:SEPARATOR');
 var installPath = nconf.get('server:installPath');
+const robotName = nconf.get('server:name');
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
@@ -44,12 +45,12 @@ var serBaud = nconf.get('server:serBaud');
 var serverPort = nconf.get('server:serverPort');
 var version = nconf.get('server:version');
 var videoFeedPort = nconf.get('video:port');
-// var videoWidth = nconf.get('video:videoWidth');
-// var videoHeight = nconf.get('video:videoHeight');
-// var fps = nconf.get('video:fps');
+var videoWidth = nconf.get('video:videoWidth');
+var videoHeight = nconf.get('video:videoHeight');
+var fps = nconf.get('video:fps');
 
 // include custom functions ======================================================================
-var systemModules = require(installPath + 'server/app/lib/systemModules');
+//var systemModules = require(installPath + 'server/app/lib/systemModules');
 var functions = require(installPath + 'server/app/lib/functions');
 var camera = require(installPath + 'server/app/lib/camera');
 var videoFeed = require(installPath + 'server/app/lib/video');
@@ -96,15 +97,10 @@ sPort.on('open', function() {
 //serialPort.on('data', console.log)
 
 
-
-//---------------
-
-
 io.on('connection', function(socket) {
     //socket.emit('connected', version, Telemetry);
 
     var myDate = new Date();
-
     var startMessage = 'Connected ' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds() + ' v' + version + ' @' + serverADDR;
     //Init the heades for telemtry data
     serialPort.write('READ RemoteInit\n\r');
@@ -114,7 +110,6 @@ io.on('connection', function(socket) {
     socket.emit('connected', startMessage, serverADDR, serverPort, videoFeedPort, PID);
     console.log('New socket.io connection - id: %s', socket.id);
 
-    //Add also the disconnection event
     log.info('Client connected ' + socket.id, startMessage, serverADDR, serverPort, videoFeedPort, PID + ' video: ' + videoWidth, videoHeight, fps);
 
     setTimeout(function() {
@@ -130,14 +125,7 @@ io.on('connection', function(socket) {
   }, 250);
 */
 
-    setInterval(function() {
-
-        var usage = "N/A";
-        temperature = fs.readFileSync("/sys/class/thermal/thermal_zone0/temp");
-        temperature = ((temperature / 1000).toPrecision(3)) + "°C";
-
-        socket.emit("CPUInfo", temperature, usage);
-    }, 3 * 1000);
+    CPUInfo();
 
     socket.on('Video', function(Video) {
         socket.emit('CMD', Video);
@@ -149,7 +137,7 @@ io.on('connection', function(socket) {
 
     });
 
-    //Set commands goes to Arduino directly
+    //Set commands SCMD are commands to control arduino. They go to Arduino directly.
     socket.on('SCMD', function(CMD) {
         serialPort.write('SCMD ' + CMD + '\n');
         log.debug('Command SCMD ' + CMD);
@@ -160,14 +148,13 @@ io.on('connection', function(socket) {
 
     });
 
-    //Server Commands
+    //Server Commands control the behaviour of teh server
     socket.on('SerCMD', function(CMD) {
         socket.emit('CMD', CMD);
         if (CMD == "LOG_ON" && !LogR) {
             TelemetryFN = 'Telemetry_' + systemModules.timeStamp() + '.csv';
             socket.emit('Info', telemetryfilePath + TelemetryFN)
             log.debug('Telemetry logging started ' + telemetryfilePath + TelemetryFN);
-
             systemModules.setTelemetryFile(telemetryfilePath, TelemetryFN, TelemetryHeader, PIDHeader, SEPARATOR);
             LogR = 1;
 
@@ -187,15 +174,15 @@ io.on('connection', function(socket) {
         function puts(error, stdout, stderr) {
             sys.puts(stdout)
         }
-        log.info('Server rebootiing now');
+        log.info(robotName + ' rebootiing now');
         exec('sudo reboot now');
-        sockets.emit('Info', "Rebooting")
+        sockets.emit('Info', robotName + " rebooting")
 
     });
 
     socket.on('SHUTDOWN', function() {
-        socket.emit('Info', "Bailey going down for maintenance now!");
-        log.info('Bailey going down for maintenance now!');
+        socket.emit('Info', robotName + " going down for maintenance now!");
+        log.info(robotName + ' going down for maintenance now!');
 
         function puts(error, stdout, stderr) {
             sys.puts(stdout)
@@ -217,12 +204,10 @@ io.on('connection', function(socket) {
 
     eventEmitter.on('CMDecho', function(data) {
         socket.emit('CMD', data);
-
     });
 
     eventEmitter.on('serialData', function(data) {
         socket.emit('serialData', data);
-
     });
 
 });
@@ -235,8 +220,8 @@ io.on('disconnect', function() {
 });
 
 http.listen(serverPort, function() {
-    console.log('listening on *: ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
-    log.info('Server listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
+    console.log(robotName + ' listening on *: ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
+    log.info(robotName + ' listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
 
 
     //Read input from Arduino and stores it into a dictionary
@@ -244,13 +229,19 @@ http.listen(serverPort, function() {
         /*
         We store sensor data in arrays.
         0/ send command via serial to provide data
-        1/ check what are we receiving (first letter of the trnasmission)
+        1/ check what are we receiving (first letter of the trasmission)
         2/ populate the correct variable
-
         */
-        //"T" means we are receiving Telemetry data
+
+        //"T": Telemetry data
+        //"SCMD": Set Command
+        //"TH": Telemetry Headers
+        //SYSH: System Headers (Arduino)
+        // SYS:
+        // PID:
+        // PIDH:
         //console.log(data);
-        //this emits raw data from Arduino for debug purposes
+        //this emits raw data from Arduino for debug purposes, a html file can pubish it
         eventEmitter.emit('serialData', data);
         //console.log(data);
         if (data.indexOf('SCMD') !== -1) {
@@ -297,9 +288,7 @@ http.listen(serverPort, function() {
             }
             setTimeout(function() {
                 serialPort.write('READ SYSParamTX\n\r');
-
             }, 100)
-
         }
 
         if (data.indexOf('SYS') !== -1) {
@@ -343,9 +332,9 @@ http.listen(serverPort, function() {
             }, 100);
         }
 
-        //Change the first word to be 'ArduConfig'
+        //Change the first word to be 'ArduConfig' => Chaneg also inb Arduino
         //If the first word is '***' prints in the server console. Used to debug the config from Arduino
-        if (data.indexOf('***') !== -1) {
+        if (data.indexOf('ArduConfig') !== -1) {
             console.log(data);
             log.info('Configuration received from Arduino: ' + data);
 
@@ -359,14 +348,14 @@ http.listen(serverPort, function() {
 
         //IS THIS SILL RELEVANT?
         //Get the header for the object that stores telemetry data
-        if (data.indexOf('HEADER') !== -1) {
-            TelemetryHeader = data.split(SEPARATOR);
-            var arrayLength = TelemetryHeader.length;
-            for (var i = 0; i < arrayLength; i++) {
-                Telemetry[TelemetryHeader[i]] = "N/A";
-                //console.log(TelemetryHeader[i]);
-            }
-        }
+        // if (data.indexOf('HEADER') !== -1) {
+        //     TelemetryHeader = data.split(SEPARATOR);
+        //     var arrayLength = TelemetryHeader.length;
+        //     for (var i = 0; i < arrayLength; i++) {
+        //         Telemetry[TelemetryHeader[i]] = "N/A";
+        //         //console.log(TelemetryHeader[i]);
+        //     }
+        // }
 
 
     });
