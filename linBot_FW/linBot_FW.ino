@@ -26,7 +26,7 @@
 #define SERIALCOMMAND_HARDWAREONLY 1
 #include <SerialCommand.h> // https://github.com/kroimon/Arduino-SerialCommand.git
 
-//------------------ Constants ------------------ 
+//------------------ Constants ------------------
 #define TO_RAD(x) (x * 0.01745329252)  // *pi/180
 #define TO_DEG(x) (x * 57.2957795131)  // *180/pi
 #define speedMultiplier 1
@@ -35,7 +35,7 @@
 
 /* Configutation parameters */
 struct Configuration {
-  String FirmwareVersion;  
+  String FirmwareVersion;
 
   int Rin1Pin;
   int Rin2Pin;
@@ -48,15 +48,15 @@ struct Configuration {
   int stepsPerRev;
   int maxSpeed;
   int maxAcc;
-  
+
   double steerGain;
   double throttleGain;
   double Maxsteer;
   double Maxthrottle;
   int motorsON;
-  
+
   int commandDelay;
- 
+
   boolean debug;
   uint8_t debugLevel;
   uint8_t debugSampleRate;
@@ -98,18 +98,18 @@ void setConfiguration(boolean force) {
     configuration.stepsPerRev=200;
     configuration.maxSpeed=300;
     configuration.maxAcc = 25;
-    
+
     configuration.steerGain = 0.7;
     configuration.throttleGain = 1;
-    configuration.Maxsteer = 100; //Max allowed percentage difference. Up to the remote to provide the right scale.  
+    configuration.Maxsteer = 100; //Max allowed percentage difference. Up to the remote to provide the right scale.
     configuration.Maxthrottle = 100; //Max speed expressed in inclination degrees. Up to the remote to provide the right scale.
-        
+
     configuration.motorsON = 0;
-  
+
     configuration.debug = 0;
-  
+
     configuration.commandDelay = 5;
-  
+
     configuration.debugLevel = 0;
     configuration.debugSampleRate = 1000;
     //  configuration.speedPIDSetpointDebug = 1;
@@ -124,7 +124,7 @@ void setConfiguration(boolean force) {
     configuration.angleRawDebug = 1;
     configuration.activePIDTuningDebug = 1;
     //configuration.speakerPin = 13;
-    
+
     saveConfig();
     delay(100);
   }
@@ -153,11 +153,11 @@ int currentSpeedR = 0;
 
 SerialCommand SCmd;   // The SerialCommand object
 
-//AccelStepper motorR(4, configuration.Rin1Pin, configuration.Rin2Pin, configuration.Rin3Pin, configuration.Rin4Pin);  
-//AccelStepper motorL(4, configuration.Lin1Pin, configuration.Lin2Pin, configuration.Lin3Pin, configuration.Lin4Pin);  
+//AccelStepper motorR(4, configuration.Rin1Pin, configuration.Rin2Pin, configuration.Rin3Pin, configuration.Rin4Pin);
+//AccelStepper motorL(4, configuration.Lin1Pin, configuration.Lin2Pin, configuration.Lin3Pin, configuration.Lin4Pin);
 
-//Stepper motorR(200, 4, 5, 6, 7);  
-//Stepper motorL(200, 8, 9, 10, 11);  
+//Stepper motorR(200, 4, 5, 6, 7);
+//Stepper motorL(200, 8, 9, 10, 11);
 AccelStepper motorR(4, 4, 5, 6, 7);
 AccelStepper motorL(4, 8, 9, 10, 11);
 
@@ -177,8 +177,8 @@ TimedAction ReadIMUTimedAction = TimedAction(100, ReadIMU);
 TimedAction TelemetryTXTimedAction = TimedAction(250, TelemetryTX);
 
 
-//------------------ Setup ------------------ 
-void setup() { 
+//------------------ Setup ------------------
+void setup() {
   //pinMode(configuration.speakerPin, OUTPUT);
 
   Serial.begin(SERIAL_BAUD);
@@ -191,30 +191,30 @@ void setup() {
   Wire.begin();
   UserControl[0]=0;
   UserControl[1]=0;
-  
+
   //Init control systems
   controlConfig();
   motorsSetup();
- 
+
   //wdt_enable(WDTO_2S);
   delay(5);
   my3IMU.init(); // the parameter enable or disable fast mode
   delay(5);
-  
-  // Setup callbacks for SerialCommand commands 
-  SCmd.addCommand("SCMD", setCommand);       
-  SCmd.addCommand("READ", printCommand); 
+
+  // Setup callbacks for SerialCommand commands
+  SCmd.addCommand("SCMD", setCommand);
+  SCmd.addCommand("READ", printCommand);
 
 }
 
-//------------------ Main loop ------------------ 
-void loop() { 
+//------------------ Main loop ------------------
+void loop() {
   StartL = millis();
   //wdt_reset();
   // update sensors and motors, also chek commands and send back telemetry
   //ADD HERE A TIMED ACTIONS FOR SENSORS
 
-  
+
   //updateMotorStatusesTimedAction.check();
   ReadIMUTimedAction.check();
   RemoteReadTimedAction.check();
@@ -222,7 +222,7 @@ void loop() {
   //updateMotorSpeedTimedAction.check();
   updateMotorSpeeds(UserControl[0],UserControl[1]);
  LoopT = millis() - StartL;
- 
+
 }
 
 /* just debug functions. uncomment the debug information you want in debugEverything */
@@ -247,9 +247,6 @@ void debugEverything() {
 void ReadIMU() {
   my3IMU.getYawPitchRoll(ypr);
   altimeter = my3IMU.getBaroAlt();
-  
-  
+
+
 }
-  
-
-

@@ -25,10 +25,10 @@ void printCommand() {
 
   else if (String("printConfig").equals(arg)) {
     Serial.println("DebugCFG");
-    Serial.println("*** Configuration");
-    Serial.println("*** --------------------------------------------------");
+    Serial.println("ArduConfig Configuration");
+    Serial.println("--------------------------------------------------");
     //ADD HERE OTHER PARAMETERS
-    Serial.println("*** --------------------------------------------------");
+    Serial.println("--------------------------------------------------");
 
   }
 
@@ -40,27 +40,27 @@ void TelemetryTX()
 { // for help on dtostrf http://forum.arduino.cc/index.php?topic=85523.0
 
   String line = "";
-  String line2="";
+  String line2= "";
   if (!configuration.debug) {
     char ypr0[6], ypr1[6], ypr2[6], headingBuff[6], altBuff[6];
   String telemMarker ="T";
     //Need to calculate parameters here because the main loop has a different frequency
     TxLoopTime = millis()-TxLoopTime;
-    
-   
-  String line = telemMarker + SEPARATOR + 
-        dtostrf(ypr[0],1,2,ypr0) +  SEPARATOR + 
-        dtostrf(ypr[1],1,2,ypr1) +  SEPARATOR + 
+
+
+  String line = telemMarker + SEPARATOR +
+        dtostrf(ypr[0],1,2,ypr0) +  SEPARATOR +
+        dtostrf(ypr[1],1,2,ypr1) +  SEPARATOR +
         dtostrf(ypr[2],1,2,ypr2) +  SEPARATOR +
         "test" + SEPARATOR;
-  String line2 =      
+  String line2 =
         //dtostrf(heading,1,2,headingBuff) +  SEPARATOR +
         "N/A" +  SEPARATOR +
         dtostrf(altimeter,1,2,altBuff) +  SEPARATOR +
         LoopT;
 
-Serial.println(line + line2); 
-    
+Serial.println(line + line2);
+
     /*line = "T" + SEPARATOR
            + yaw + SEPARATOR
            + pitch + SEPARATOR
@@ -129,10 +129,10 @@ void RemoteInit()
             "yaw" + SEPARATOR +
             "pitch" + SEPARATOR +
             "roll" + SEPARATOR +
-            "heading" + SEPARATOR + 
-            "alt" + SEPARATOR + 
+            "heading" + SEPARATOR +
+            "alt" + SEPARATOR +
             "LoopT";
- 
+
   Serial.println(headers);/*
   delay(100);
   headers = "PIDH" + SEPARATOR +
@@ -160,15 +160,15 @@ void setCommand()
   char *arg;
   char *value;
   char *value2;
-  
+
   arg = SCmd.next();
   value = SCmd.next();
   value2 = SCmd.next();
-  
+
   //This echoes the command back to confirm it is received correctely
   String cmd = String("SCMD " + String(arg) + " " + String(value));
   Serial.println(cmd);
-     
+
   if (value != NULL)
   {
     // parameters
@@ -181,7 +181,7 @@ void setCommand()
       Serial.print("this is a test arg ");
       Serial.println(value);
     }
-    
+
     else if (String("SerialDebug").equals(arg)) {
       configuration.debug = atoi(value);
     }*/
@@ -189,7 +189,7 @@ void setCommand()
     else if (String("E_EEPROM").equals(arg)) {
       for (int i = 0; i < 512; i++)
         EEPROM.write(i, 255);
-        
+
       loadConfig();
       RemoteInit();
 
@@ -200,7 +200,7 @@ void setCommand()
     }
     else if (String("Load_def").equals(arg)) {
       setConfiguration((boolean) int(value));
-      
+
     }
 
     // steering
@@ -208,10 +208,10 @@ void setCommand()
       configuration.steerGain = atoi(value) / 100;
     else if (String("SetthrottelGain").equals(arg))
       configuration.steerGain = atoi(value) / 100;
-    
+
     else if (String("move").equals(arg))
     {
-      
+
       UserControl[1] =  (atof(value) / 100) * configuration.Maxthrottle;
       UserControl[0] = (atof(value2) / 100) * configuration.Maxsteer;
     }
@@ -219,13 +219,13 @@ void setCommand()
     { //sign * value
       //SCMD Steer 10
       UserControl[0] = (atof(value) / 100) * configuration.Maxsteer;
-     
+
       //Serial.println(UserControl[0]);
     }
         else if (String("Throttle").equals(arg))
     { //SCMD Throttle 50
       UserControl[1] =  (atof(value) / 100) * configuration.Maxthrottle; //((atof(value))/(atof(value))) * max(abs(atof(value)), configuration.Maxthrottle);
-      
+
        //Serial.println(UserControl[1]);
     }
     else if (String("MotorsStop").equals(arg))
@@ -241,14 +241,14 @@ void setCommand()
     { //sign * value
     //SCMD Motorstest 0
       Serial.print("stepsPerRev ");
-      Serial.println(configuration.stepsPerRev); 
+      Serial.println(configuration.stepsPerRev);
       Serial.print("Rin1Pin ");
-     Serial.println(configuration.Rin1Pin); 
-/*          Serial.println("testing motors");configuration.Rin2Pin, 
-            Serial.println("testing motors");configuration.Rin3Pin, 
+     Serial.println(configuration.Rin1Pin);
+/*          Serial.println("testing motors");configuration.Rin2Pin,
+            Serial.println("testing motors");configuration.Rin3Pin,
               Serial.println("testing motors");configuration.Rin4Pin)
   */    Serial.println("testing motors");
-     
+
       /*motorR.setSpeed(10);
       motorR.step(50);
       Serial.println("testing LEFT motor");
@@ -261,36 +261,36 @@ void setCommand()
     { //sign * value
       configuration.Maxthrottle = atoi(value);
     }
-  
+
     else if (String("maxAcc").equals(arg))
     { //sign * value
       configuration.maxAcc = atoi(value);
     }
-    
+
     else if (String("debugLevel").equals(arg))
       configuration.debugLevel = atoi(value);
     else if (String("debugSampleRate").equals(arg))
       configuration.debugSampleRate = atoi(value);
 
-    
-   
+
+
 else {
-      
+
       Serial.print("E, Unknown command ");
       Serial.print(arg);
       Serial.print(" arg ");
       Serial.println(value);
     }
-     
+
 
   }
   else {
-      
+
       Serial.print("E, Unknown command ");
       Serial.println(arg);
-    
+
   }
-  
+
 
 
 
@@ -303,4 +303,3 @@ void unrecognizedCMD() {
   Serial.print("E, unrecognized command");
 
 }
-
