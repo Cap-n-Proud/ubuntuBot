@@ -1,4 +1,4 @@
-const serPOrt = "/dev/ttyACM0"
+const serPort = "/dev/ttyACM0"
 const serBaud = "9600"
 const SerialPort = require('serialport')
 const serialPort = new SerialPort(serPort, {
