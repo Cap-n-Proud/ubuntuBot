@@ -1,6 +1,4 @@
-var cv = require('opencv');
-var server = require('../server');
-
+const socketIOProvider = require('socket.io');
 const cv = require('opencv4nodejs');
 
 const fps = 30; //frames per second
