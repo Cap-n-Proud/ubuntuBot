@@ -1,3 +1,45 @@
+var fs = require('safefs');
+
+function timeStamp() {
+    var MyDate = new Date();
+    var MyDateString;
+    var MyTimeStamp;
+    MyDateString = ('0' + MyDate.getFullYear()).slice(-2) + '-' + ('0' + (MyDate.getMonth() + 1)).slice(-2) + '-' + ('0' + (MyDate.getUTCDate())).slice(-2);
+    MyTimeStamp = ('0' + MyDate.getHours()).slice(-2) + '-' + ('0' + (MyDate.getMinutes())).slice(-2) + '-' + ('0' + (MyDate.getSeconds())).slice(-2);
+
+    return MyDateString + '_' + MyTimeStamp
+}
+
+function setTelemetryFile(PathTelFile, TelemetryFN, TelemetryHeader, PIDHeader, SEPARATOR) {
+    var file = fs.createWriteStream(PathTelFile + TelemetryFN);
+    var Headers = TelemetryHeader.concat(PIDHeader);
+    Headers = 'Timestamp' + SEPARATOR + Headers.join(", ");
+    Headers = Headers.replace(/[\n\r]/g, '');
+    Headers = Headers + '\n';
+
+    //file.write(Headers.join(", "), function (err) {
+    file.write(Headers, function(err) {
+        if (err) {
+            console.log('ERROR: ' + err);
+            console.log(LogRow + '\n')
+            LogR = 0;
+        }
+    });
+}
+
+function addTelemetryRow(PathTelFile, TelemetryFN, TelemetryHeader, data, PIDHeader, PIDVal, SEPARATOR) {
+    LogRow = new Date().getTime() + SEPARATOR;
+    LogRow = LogRow + data.replace(/[\n\r]/g, '') + PIDVal + '\n';
+    fs.appendFile(PathTelFile + TelemetryFN, LogRow, function(err) {
+        if (err) {
+            console.log('ERROR: ' + err);
+            console.log(LogRow + '\n')
+            LogR = 0;
+        }
+    });
+}
+
+//Linear rescale of values
 function rescale(x, in_min, in_max, out_min, out_max) {
     var output;
     output = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -11,9 +53,7 @@ function rescale(x, in_min, in_max, out_min, out_max) {
     }
 
     return output
-
 }
-
 
 //Get IP address http://stackoverflow.com/questions/3653065/get-local-ip-address-in-node-js
 function findMyIP() {
@@ -43,6 +83,8 @@ function findMyIP() {
 }
 
 // exports ======================================================================
-//exports.timeStamp = timeStamp;
 exports.rescale = rescale;
 exports.findMyIP = findMyIP;
+exports.timeStamp = timeStamp;
+exports.addTelemetryRow = addTelemetryRow;
+exports.setTelemetryFile = setTelemetryFile;

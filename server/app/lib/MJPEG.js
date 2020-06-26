@@ -16,7 +16,7 @@ camera.setHeight(imageH);
     function startVideoFeed(req, res){
 	mjpegReqHandler = mjpegServer.createReqHandler(req, res);
 	var timer = setInterval(captureFrame, 100);
-      
+
     }
 
 var i = 0;
@@ -28,7 +28,6 @@ function captureFrame() {
                 if (err) throw err;
                 //console.log("Image acquired: ", im.size());
                 //console.log(im.isBuffer());
-
                 var width = im.width();
                 var height = im.height();
                 var c = ["255", "130", "0"];
@@ -40,7 +39,7 @@ function captureFrame() {
                 im.putText("r:", width - 50, height - 10, "CV_FONT_HERSHEY_SIMPLEX", [100, 200, 50], 0.5);
 
 
-                
+
                 drawCrossHair(im);
                 if (im.size()[0] > 0 && im.size()[1] > 0) {
 
@@ -56,7 +55,7 @@ function captureFrame() {
 
 
 
-	
+
 function sendJPGData(err, data) {
         mjpegReqHandler.write(data, function() {});
 }
