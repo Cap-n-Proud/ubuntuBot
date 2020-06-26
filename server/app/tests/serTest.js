@@ -17,8 +17,8 @@ const sPort = new com(serPort,{
 const serialPort = sPort.pipe(new Readline({ delimiter: '\r\n' }))
 
 
-serialPort.on('open',function() {
-  console.log('Arduino connected on '+ serPort + ' @' + serBaud);
+sPort.on('open',function() {
+  console.log('Arduino connected on '+ serPort + ' @' + serBaud)
+})
 
-});
 serialPort.on('data', console.log)
