@@ -4,15 +4,15 @@
   "description": "Node application to control robots",
   "main": "server.js",
   "dependencies": {
-    "express": "x.x.x",
-    "nconf": "x.x.x",
-    "events": "x.x.x",
     "bunyan": "x.x.x",
+    "events": "^3.1.0",
+    "express": "x.x.x",
     "fs": "x.x.x",
+    "nconf": "^0.10.0",
+    "opencv4nodejs": "x.x.x",
+    "safefs": "^6.9.0",
     "serialport": "x.x.x",
-    "safefs": "x.x.x",
-    "socket.io": "x.x.x",
-    "opencv4nodejs": "x.x.x"
+    "socket.io": "^2.3.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
