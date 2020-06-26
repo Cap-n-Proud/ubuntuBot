@@ -1,18 +1,18 @@
 {
   "server": {
-    "name": "bot-Pi",
+    "name": "ubuntuBot",
     "serverPort": 54321,
     "serBaud": 38400,
     "serPort": "/dev/ttyACM0",
     "version": "2",
     "nodeLib": "",
-    "SNFolder": "/home/odroid/Documents/SN/",
-    "installPath": "/home/odroid/bot/",
-    "logfilePath": "/home/odroid/Documents/log/",
+    "SNFolder": "/home/pi/Documents/SN/",
+    "installPath": "/home/pi/bot/",
+    "logfilePath": "/home/pi/Documents/log/",
     "empty":"N/A"
   },
   "telemetry": {
-    "telemetryfilePath": "/home/odroid/Documents/telemetry/",
+    "telemetryfilePath": "/home/pi/Documents/telemetry/",
     "SEPARATOR": ","
   },
   "hardware":{
