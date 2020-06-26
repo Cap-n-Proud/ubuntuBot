@@ -1,11 +1,11 @@
 {
-  "name": "bot",
-  "version": "2.0.0",
+  "name": "ubuntu",
+  "version": "2.5.0",
   "description": "Node application to control robots",
   "main": "server.js",
   "dependencies": {
     "express": "4.x.x",
-    "nconf": "0.8.x",
+    "nconf": "0.x.x",
     "events": "1.x.x",
     "bunyan": "1.x.x",
     "fs": "0.x.x",
