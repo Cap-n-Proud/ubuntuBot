@@ -1,10 +1,10 @@
-var cv = require('opencv');
+const cv = require('opencv4nodejs');
 var server = require('../server');
 
 //var exec = require('child_process').exec;
 
 var frame = 0;
-var fps = 0;
+var fps = 30;
 var e = 0;
 var heading = 0;
 
@@ -14,18 +14,15 @@ var heading = 0;
     exec('sudo modprobe bcm2835-v4l2', puts);
 */
 var screenMargin = 3;
-
-var camera = new cv.VideoCapture(0);
+const videoSource = 0;
+const videoCap = new cv.VideoCapture(videoSource);
 
 function startVideoFeed(socket, videoWidth, videoHeight, fps) {
 
-    camera.setWidth(videoWidth);
-    camera.setHeight(videoHeight);
-    var camInterval = 1000 / fps;
-
-
-
-    var memory, rss, memoryLeakLimit;
+  videoCap.set(cv.CAP_PROP_FRAME_WIDTH, Number(videoWidth));
+  videoCap.set(cv.CAP_PROP_FRAME_HEIGHT,  Number(videoWidth));
+  var camInterval = 1000 / fps;
+  var memory, rss, memoryLeakLimit;
 
 
     setInterval(function() {
@@ -78,7 +75,7 @@ function startVideoFeed(socket, videoWidth, videoHeight, fps) {
         im.release();
 	d = new Date();
 	fps = 1000/(d.getTime()-start);
-        //}); 
+        //});
 
 
 
@@ -103,7 +100,7 @@ function map(x, in_min, in_max, out_min, out_max)
 
 function reduce(val,base)
 {
- 
+
     return val - parseInt(val/base)*base;
 }
 
@@ -115,15 +112,15 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
     var onScreenColor = JSON.parse(server.nconf.get('video:onScreenColor'));
     var fontSize = videoWidth * JSON.parse(server.nconf.get('video:fontBaseSize')) / 320;
     var compassRange = maxI - minI;
-    
+
     for (i = minI; i <  maxI; i++) {
-      
+
                   if (i%20==0)
         im.line([reduce(i+heading,compassRange)+minI, - screenMargin], [reduce(i+heading,compassRange)+minI, + screenMargin + 10], hudColor);
                   if (i%10==0)
         im.line([reduce(i+heading,compassRange)+minI, - screenMargin], [reduce(i+heading,compassRange)+minI, + screenMargin + 5], hudColor);
-        
-        
+
+
         if (i == map(0,0,360,minI, maxI))
             im.putText("N", reduce(i+heading+videoWidth/2,compassRange)+minI, 25, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, 0.7*fontSize);
         if (i == map(270,0,360,minI, maxI))
@@ -133,26 +130,26 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
         if (i == map(90,0,360,minI, maxI))
             im.putText("W", reduce(i+heading+videoWidth/2,compassRange)+minI, 25, "CV_FONT_HERSHEY_SIMPLEX",  onScreenColor, 0.7*fontSize);
         drawHeading(im, videoWidth, videoHeight, heading);
-        
+
     }
 }
-    
+
     function drawHeading(im, videoWidth, videoHeight, heading)
     {
-        
+
         var lenght = fontSize*80, height= fontSize*30;
-        
-        
+
+
       im.line([videoWidth/2-lenght/2,+45], [videoWidth/2+lenght/2,+45], hudColor);
       im.line([videoWidth/2-lenght/2,+45], [videoWidth/2-lenght/2,+45-height], hudColor);
       im.line([videoWidth/2+lenght/2,+45], [videoWidth/2+lenght/2,+45-height], hudColor);
       im.line([videoWidth/2-lenght/2,+45-height], [videoWidth/2,+45-height-8], hudColor);
       im.line([videoWidth/2+lenght/2,+45-height], [videoWidth/2,+45-height-8], hudColor);
       im.putText(heading, videoWidth/2-lenght/2+2*screenMargin, 45-screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
-   
-        
+
+
     }
-    
+
 function drawOverlayInfo(im, videoWidth, videoHeight, memory, fps) {
     var onScreenColor = JSON.parse(server.nconf.get('video:onScreenColor'));
     var fontSize = videoWidth * JSON.parse(server.nconf.get('video:fontBaseSize')) / 320;
@@ -163,16 +160,16 @@ function drawOverlayInfo(im, videoWidth, videoHeight, memory, fps) {
 
     im.putText(videoWidth + "x" + videoHeight, leftCol, videoHeight - 0 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
    // im.putText("f:" + frame, leftCol, videoHeight - 1 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
-im.putText("fps: " + parseInt(fps), leftCol, videoHeight - 1 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);  
-    
-im.putText("y: " + server.Telemetry['yaw'], rightCol, videoHeight - 3 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);    
-im.putText("r: " + server.Telemetry['roll'], rightCol, videoHeight - 2 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);    
-im.putText("p: " + server.Telemetry['pitch'], rightCol, videoHeight - 4 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);    
-im.putText("t: " + server.temperature, rightCol, videoHeight - 1 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);    
+im.putText("fps: " + parseInt(fps), leftCol, videoHeight - 1 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
 
-    //im.putText("t: " + server.nconf.get('server:version'), 0.8 * videoWidth, 0.3 * videoHeight - 3 * lineSpace, "CV_FONT_HERSHEY_SIMPLEX", server.nconf.get('video:onScreenColor'), 0.5);    
+im.putText("y: " + server.Telemetry['yaw'], rightCol, videoHeight - 3 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
+im.putText("r: " + server.Telemetry['roll'], rightCol, videoHeight - 2 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
+im.putText("p: " + server.Telemetry['pitch'], rightCol, videoHeight - 4 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
+im.putText("t: " + server.temperature, rightCol, videoHeight - 1 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
 
-    // im.putText(" x " + videoHeight, 0.01 * videoWidth + 10, 0.9 * videoHeight, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);      
+    //im.putText("t: " + server.nconf.get('server:version'), 0.8 * videoWidth, 0.3 * videoHeight - 3 * lineSpace, "CV_FONT_HERSHEY_SIMPLEX", server.nconf.get('video:onScreenColor'), 0.5);
+
+    // im.putText(" x " + videoHeight, 0.01 * videoWidth + 10, 0.9 * videoHeight, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
 
     im.putText("m: " + parseInt(memory), rightCol, videoHeight - 0 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
 
