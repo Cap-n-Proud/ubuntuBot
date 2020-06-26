@@ -12,9 +12,8 @@
 #include <I2Cdev.h>
 #include <MPU60X0.h>
 #define M_PI 3.14159265358979323846f
-  #include <MS561101BA.h>
+#include <MS561101BA.h>
 #include <HMC58X3.h>
-#include <Wire.h> // for i2c
 
 #include <TimedAction.h> // for updating sensors and debug http://bit.ly/pATDBi http://playground.arduino.cc/Code/TimedAction
 #include <EEPROM.h> // for storing configuraion

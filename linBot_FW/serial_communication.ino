@@ -27,6 +27,7 @@ void printCommand() {
     Serial.println("DebugCFG");
     Serial.println("ArduConfig Configuration");
     Serial.println("--------------------------------------------------");
+    Serial.println(configuration);
     //ADD HERE OTHER PARAMETERS
     Serial.println("--------------------------------------------------");
 
