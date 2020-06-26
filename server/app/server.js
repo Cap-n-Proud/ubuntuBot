@@ -1,6 +1,5 @@
 // sudo udevadm control --reload-rules
-// to refresh the port allocation
-// cd /home/pi/Bailey/server/app
+
 
 var nconf = require('nconf');
 nconf.argv()
