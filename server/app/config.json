@@ -7,7 +7,7 @@
     "version": "2",
     "nodeLib": "",
     "SNFolder": "/home/pi/Documents/SN/",
-    "installPath": "/home/pi/ubuntuBOt/",
+    "installPath": "/home/pi/ubuntuBot/",
     "logfilePath": "/home/pi/Documents/log/",
     "empty":"N/A"
   },
