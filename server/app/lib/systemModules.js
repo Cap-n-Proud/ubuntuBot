@@ -16,17 +16,16 @@ var mkdirSync = function(path) {
 //Get IP address http://stackoverflow.com/questions/3653065/get-local-ip-address-in-node-js
 //Check also this http://stackoverflow.com/questions/24378272/node-js-how-to-get-the-ip-address-of-http-server-listening-on-a-specific-port
  function timeStamp(){
-      
      var MyDate = new Date();
         var MyDateString;
         var MyTimeStamp;
         MyDateString = ('0' + MyDate.getFullYear()).slice(-2) + '-' + ('0' + (MyDate.getMonth() + 1)).slice(-2) + '-' + ('0' + (MyDate.getUTCDate())).slice(-2);
         MyTimeStamp = ('0' + MyDate.getHours()).slice(-2) + '-' + ('0' + (MyDate.getMinutes())).slice(-2) + '-' + ('0' + (MyDate.getSeconds())).slice(-2);
 
-      return MyDateString + '_' + MyTimeStamp      
+      return MyDateString + '_' + MyTimeStamp
     }
-    
-    
+
+
 function getServerIP(){
 var os = require('os');
 var ifaces = os.networkInterfaces();
@@ -60,7 +59,7 @@ function setTelemetryFile(PathTelFile, TelemetryFN, TelemetryHeader, PIDHeader, 
         Headers = 'Timestamp' + SEPARATOR + Headers.join(", ");
         Headers = Headers.replace(/[\n\r]/g, '');
         Headers = Headers + '\n';
-        
+
         //file.write(Headers.join(", "), function (err) {
         file.write(Headers, function (err) {
         if (err) {
@@ -68,12 +67,12 @@ function setTelemetryFile(PathTelFile, TelemetryFN, TelemetryHeader, PIDHeader, 
 	    console.log(LogRow + '\n' )
             LogR=0;
 		  }
-	});    
+	});
 }
 
 function addTelemetryRow(PathTelFile, TelemetryFN, TelemetryHeader, data, PIDHeader, PIDVal, SEPARATOR){
     LogRow = new Date().getTime() + SEPARATOR;
-    LogRow = LogRow + data.replace(/[\n\r]/g, '') + PIDVal + '\n';  
+    LogRow = LogRow + data.replace(/[\n\r]/g, '') + PIDVal + '\n';
     fs.appendFile(PathTelFile+TelemetryFN, LogRow, function (err) {
         if (err) {
             console.log('ERROR: ' + err);
