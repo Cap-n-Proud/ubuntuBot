@@ -105,7 +105,7 @@ sPort.on('open',function() {
   console.log('Arduino connected on '+ serPort + ' @' + serBaud)
 })
 
-serialPort.on('data', console.log)
+//serialPort.on('data', console.log)
 
 
 
