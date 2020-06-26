@@ -13,7 +13,7 @@
   },
   "telemetry": {
     "telemetryfilePath": "/home/odroid/Documents/telemetry/",
-    "SEPARATOR": ","    
+    "SEPARATOR": ","
   },
   "hardware":{
     "SERVO_1_GPIO": 4,
@@ -21,18 +21,18 @@
     "SERVO_1_MIN": "0.140",
     "SERVO_1_MAX": "0.160",
     "SERVO_2_MIN": "0.140",
-    "SERVO_2_MAX": "0.160"    
+    "SERVO_2_MAX": "0.160"
   },
   "ArduinoCfg":{
     "SERVO_1_GPIO": 4,
-    "SERVO_2_GPIO": 17    
+    "SERVO_2_GPIO": 17
   },
   "camera": {
     "TLimgWidth": 2592,
     "TLimgHeight": 1944,
     "TLInterval": 10000,
     "SNimgWidth": 320,
-    "SNimgHeight": 240    
+    "SNimgHeight": 240
   },
   "video": {
     "port": 9999,
@@ -46,5 +46,5 @@
     "fontBaseSize": "0.5",
     "hudColor": "[0, 255, 0]"
   }
-  
+
 }
