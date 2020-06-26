@@ -4,14 +4,14 @@
   "description": "Node application to control robots",
   "main": "server.js",
   "dependencies": {
-    "express": "4.x.x",
+    "express": "x.x.x",
     "nconf": "0.x.x",
-    "events": "1.x.x",
-    "bunyan": "1.x.x",
+    "events": "x.x.x",
+    "bunyan": "x.x.x",
     "fs": "0.x.x",
     "serialport": "x.x.x",
     "safefs": "4.x.x",
-    "socket.io": "1.x.x",
+    "socket.io": "x.x.x",
     "opencv4nodejs": "x.x.x"
   },
   "scripts": {
