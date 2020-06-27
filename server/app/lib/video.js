@@ -112,7 +112,7 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
         if (i % 10 == 0)
             im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, Number(-screenMargin)), new cv.Point(reduce(i + heading, compassRange) + minI, Number(screenMargin) + 5), new cv.Vec(hudColorR,hudColorG,hudColorB));
         if (i == map(0, 0, 360, minI, maxI))
-          im.putText("N", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, Number(screenMargin)), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(hudColorR,hudColorG,hudColorB));
+          im.putText("N", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, Number(screenMargin)), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(hudColorR),Number(hudColorG),Number(hudColorB)));
         //  im.putText("N", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
         if (i == map(270, 0, 360, minI, maxI))
             im.putText("E", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, Number(screenMargin)), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
