@@ -21,7 +21,7 @@ const onScreenColorG = nconf.get('video:onScreenColorG');
 const onScreenColorB = nconf.get('video:onScreenColorB');
 const videoWidth = nconf.get('video:videoWidth');
 const fontSize = videoWidth * nconf.get('video:fontBaseSize') / 320;
-const hudColor = hudColorR +', ' + hudColorG + ', ' + hudColorB;
+//const hudColor = hudColorR +', ' + hudColorG + ', ' + hudColorB;
 var frame = 0;
 var e = 0;
 var heading = 0;
@@ -86,10 +86,10 @@ function startVideoFeed(socket, videoWidth, videoHeight, fps) {
 };
 
 function drawCrosshair(im, videoWidth, videoHeight) {
-    im.drawLine(new cv.Point(videoWidth / 2 - 20, videoHeight / 2), new cv.Point(videoWidth / 2 - 40, videoHeight / 2), new cv.Vec(Number(hudColor)));
-    im.drawLine(new cv.Point(videoWidth / 2 + 20, videoHeight / 2), new cv.Point(videoWidth / 2 + 40, videoHeight / 2), new cv.Vec(Number(hudColor)));
-    im.drawLine(new cv.Point(videoWidth / 2, videoHeight / 2 - 20), new cv.Point(videoWidth / 2, videoHeight / 2 - 40), new cv.Vec(Number(hudColor)));
-    im.drawLine(new cv.Point(videoWidth / 2, videoHeight / 2 + 20), new cv.Point(videoWidth / 2, videoHeight / 2 + 40), new cv.Vec(Number(hudColor)));
+    im.drawLine(new cv.Point(videoWidth / 2 - 20, videoHeight / 2), new cv.Point(videoWidth / 2 - 40, videoHeight / 2), new cv.Vec(hudColorR,hudColorG,hudColorB));
+    im.drawLine(new cv.Point(videoWidth / 2 + 20, videoHeight / 2), new cv.Point(videoWidth / 2 + 40, videoHeight / 2), new cv.Vec(hudColorR,hudColorG,hudColorB));
+    im.drawLine(new cv.Point(videoWidth / 2, videoHeight / 2 - 20), new cv.Point(videoWidth / 2, videoHeight / 2 - 40), new cv.Vec(hudColorR,hudColorG,hudColorB));
+    im.drawLine(new cv.Point(videoWidth / 2, videoHeight / 2 + 20), new cv.Point(videoWidth / 2, videoHeight / 2 + 40), new cv.Vec(hudColorR,hudColorG,hudColorB));
 }
 
 function map(x, in_min, in_max, out_min, out_max) {
@@ -107,20 +107,19 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
     var compassRange = maxI - minI;
     for (i = minI; i < maxI; i++) {
         if (i % 20 == 0)
-        //im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, -screenMargin), new cv.Point(reduce(i + heading, compassRange) + minI, screenMargin + 10), new cv.Vec(Number(hudColor)));
+        //im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, -screenMargin), new cv.Point(reduce(i + heading, compassRange) + minI, screenMargin + 10), new cv.Vec(hudColorR,hudColorG,hudColorB));
         console.log(Number('HUD: ' + hudColor));
         im.drawLine(new cv.Point(10, 10), new cv.Point(10,  10), new cv.Vec(hudColorR,hudColorG,hudColorB));
-        im.drawLine(new cv.Point(10, 10), new cv.Point(10,  10), new cv.Vec(hudColor));
         if (i % 10 == 0)
-            im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, -screenMargin), new cv.Point(reduce(i + heading, compassRange) + minI, screenMargin + 5), new cv.Vec(Number(hudColor)));
+            im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, -screenMargin), new cv.Point(reduce(i + heading, compassRange) + minI, screenMargin + 5), new cv.Vec(hudColorR,hudColorG,hudColorB));
         if (i == map(0, 0, 360, minI, maxI))
-            im.putText("N", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColor)));
+            im.putText("N", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
         if (i == map(270, 0, 360, minI, maxI))
-            im.putText("E", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColor)));
+            im.putText("E", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
         if (i == map(180, 0, 360, minI, maxI))
-            im.putText("S", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColor)));
+            im.putText("S", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
         if (i == map(90, 0, 360, minI, maxI))
-            im.putText("W", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColor)));
+            im.putText("W", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
         drawHeading(im, videoWidth, videoHeight, heading);
     }
 }
@@ -128,12 +127,12 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
 function drawHeading(im, videoWidth, videoHeight, heading) {
     const lenght = fontSize * 80;
     const height = fontSize * 30;
-    im.drawLine(new cv.Point(videoWidth / 2 - lenght / 2, +45), new cv.Point(videoWidth / 2 + lenght / 2, +45), new cv.Vec(Number(hudColor)));
-    im.drawLine(new cv.Point(videoWidth / 2 - lenght / 2, +45), new cv.Point(videoWidth / 2 - lenght / 2, +45 - height), new cv.Vec(Number(hudColor)));
-    im.drawLine(new cv.Point(videoWidth / 2 + lenght / 2, +45), new cv.Point(videoWidth / 2 + lenght / 2, +45 - height), new cv.Vec(Number(hudColor)));
-    im.drawLine(new cv.Point(videoWidth / 2 - lenght / 2, +45 - height), new cv.Point(videoWidth / 2, +45 - height - 8), new cv.Vec(Number(hudColor)));
-    im.drawLine(new cv.Point(videoWidth / 2 + lenght / 2, +45 - height), new cv.Point(videoWidth / 2, +45 - height - 8), new cv.Vec(Number(hudColor)));
-    im.putText(new cv.Point(heading, videoWidth / 2 - lenght / 2 + 2 * screenMargin), new cv.Point(45 - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColor)));
+    im.drawLine(new cv.Point(videoWidth / 2 - lenght / 2, +45), new cv.Point(videoWidth / 2 + lenght / 2, +45), new cv.Vec(hudColorR,hudColorG,hudColorB));
+    im.drawLine(new cv.Point(videoWidth / 2 - lenght / 2, +45), new cv.Point(videoWidth / 2 - lenght / 2, +45 - height), new cv.Vec(hudColorR,hudColorG,hudColorB));
+    im.drawLine(new cv.Point(videoWidth / 2 + lenght / 2, +45), new cv.Point(videoWidth / 2 + lenght / 2, +45 - height), new cv.Vec(hudColorR,hudColorG,hudColorB));
+    im.drawLine(new cv.Point(videoWidth / 2 - lenght / 2, +45 - height), new cv.Point(videoWidth / 2, +45 - height - 8), new cv.Vec(hudColorR,hudColorG,hudColorB));
+    im.drawLine(new cv.Point(videoWidth / 2 + lenght / 2, +45 - height), new cv.Point(videoWidth / 2, +45 - height - 8), new cv.Vec(hudColorR,hudColorG,hudColorB));
+    im.putText(new cv.Point(heading, videoWidth / 2 - lenght / 2 + 2 * screenMargin), new cv.Point(45 - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
 }
 
 function drawOverlayInfo(im, videoWidth, videoHeight, memory, fps) {
@@ -141,14 +140,14 @@ function drawOverlayInfo(im, videoWidth, videoHeight, memory, fps) {
     const leftCol = 0.01 * videoWidth,
         rightCol = 0.75 * videoWidth;
 
-    im.putText(videoWidth + "x" + videoHeight, leftCol, videoHeight - 0 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColor)));
+    im.putText(videoWidth + "x" + videoHeight, leftCol, videoHeight - 0 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
     // im.putText("f:" + frame, leftCol, videoHeight - 1 * lineSpace - screenMargin, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
-    im.putText("fps: " + parseInt(fps), new cv.Point(leftCol, videoHeight - 1 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColor)));
-    im.putText("y: " + server.Telemetry['yaw'], new cv.Point(rightCol, videoHeight - 3 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColor)));
-    im.putText("r: " + server.Telemetry['roll'], new cv.Point(rightCol, videoHeight - 2 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColor)));
-    im.putText("p: " + server.Telemetry['pitch'], new cv.Point(rightCol, videoHeight - 4 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColor)));
-    im.putText("t: " + server.temperature, new cv.Point(rightCol, videoHeight - 1 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColor)));
-    im.putText("m: " + parseInt(memory), new cv.Point(rightCol, videoHeight - 0 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColor)));
+    im.putText("fps: " + parseInt(fps), new cv.Point(leftCol, videoHeight - 1 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+    im.putText("y: " + server.Telemetry['yaw'], new cv.Point(rightCol, videoHeight - 3 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+    im.putText("r: " + server.Telemetry['roll'], new cv.Point(rightCol, videoHeight - 2 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+    im.putText("p: " + server.Telemetry['pitch'], new cv.Point(rightCol, videoHeight - 4 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+    im.putText("t: " + server.temperature, new cv.Point(rightCol, videoHeight - 1 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+    im.putText("m: " + parseInt(memory), new cv.Point(rightCol, videoHeight - 0 * lineSpace - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
     //im.putText("t: " + server.nconf.get('server:version'), 0.8 * videoWidth, 0.3 * videoHeight - 3 * lineSpace, "CV_FONT_HERSHEY_SIMPLEX", server.nconf.get('video:onScreenColor'), 0.5);
     // im.putText(" x " + videoHeight, 0.01 * videoWidth + 10, 0.9 * videoHeight, "CV_FONT_HERSHEY_SIMPLEX", onScreenColor, fontSize);
 }
