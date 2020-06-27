@@ -68,7 +68,7 @@ function startVideoFeed(socket, videoWidth, videoHeight, fps) {
         if (server.nconf.get('video:drawCompass')) drawCompass(im, videoWidth, videoHeight, server.Telemetry['yaw']);
         if (server.nconf.get('video:drawCrosshair')) drawCrosshair(im, videoWidth, videoHeight);
         if (server.nconf.get('video:drawOverlayInfo')) drawOverlayInfo(im, videoWidth, videoHeight, rss, fps);
-        if (im.size()[0] > 0 && im.size()[1] > 0) {
+        if (im.Size()[0] > 0 && im.Size()[1] > 0) {
             socket.emit('frame', {
                 buffer: im.toBuffer({
                     ext: ".jpg",
