@@ -4,7 +4,7 @@ nconf.argv()
     .file({
         file: __dirname + '/config.json'
     });
-
+console.log(__dirname);
 const cv = require('opencv4nodejs');
 var server = require('../server');
 
