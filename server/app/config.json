@@ -44,9 +44,14 @@
     "drawCrosshair": false,
     "drawOverlayInfo": true,
     "drawCompass": true,
-    "onScreenColor": "0, 255, 0",
+    "onScreenColorR": 0,
+    "onScreenColorG": 255,
+    "onScreenColorB": 0,
     "fontBaseSize": "0.5",
-    "hudColor": "0, 255, 0"
+    "hudColorR": 0,
+    "hudColorG": 255,
+    "hudColorB": 0
+
   }
 
 }

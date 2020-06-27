@@ -13,11 +13,15 @@ var server = require('../server');
 const FPS = nconf.get('video:FPS');
 var screenMargin = nconf.get('video:screenMargin');
 const videoSource = nconf.get('video:videoSource');
-const hudColor = nconf.get('video:hudColor');
-const onScreenColor = nconf.get('video:onScreenColor');
+const hudColorR = nconf.get('video:hudColorR');
+const hudColorG = nconf.get('video:hudColorG');
+const hudColorB = nconf.get('video:hudColorB');
+const onScreenColorR = nconf.get('video:onScreenColorR');
+const onScreenColorG = nconf.get('video:onScreenColorG');
+const onScreenColorB = nconf.get('video:onScreenColorB');
 const videoWidth = nconf.get('video:videoWidth');
 const fontSize = videoWidth * nconf.get('video:fontBaseSize') / 320;
-
+const hudColor = hudColorR +', ' + hudColorG + ', ' + hudColorB;
 var frame = 0;
 var e = 0;
 var heading = 0;
@@ -105,7 +109,8 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
         if (i % 20 == 0)
         //im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, -screenMargin), new cv.Point(reduce(i + heading, compassRange) + minI, screenMargin + 10), new cv.Vec(Number(hudColor)));
         console.log(Number('HUD: ' + hudColor));
-         im.drawLine(new cv.Point(10, 10), new cv.Point(10,  10), new cv.Vec(Number(screenMargin,screenMargin,screenMargin)));
+        im.drawLine(new cv.Point(10, 10), new cv.Point(10,  10), new cv.Vec(hudColorR,hudColorG,hudColorB));
+        im.drawLine(new cv.Point(10, 10), new cv.Point(10,  10), new cv.Vec(hudColor));
         if (i % 10 == 0)
             im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, -screenMargin), new cv.Point(reduce(i + heading, compassRange) + minI, screenMargin + 5), new cv.Vec(Number(hudColor)));
         if (i == map(0, 0, 360, minI, maxI))
