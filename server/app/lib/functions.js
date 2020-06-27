@@ -83,7 +83,7 @@ function findMyIP() {
 }
 
 //Emits CPU INFO through socket
-function CPUInfo() {
+function cPUInfo() {
 
   var fs = require('safefs');
   setInterval(function() {
@@ -106,7 +106,7 @@ return temparature;
 
 // exports ======================================================================
 exports.rescale = rescale;
-exports.CPUInfo = CPUInfo;
+exports.cPUInfo = cPUInfo;
 exports.findMyIP = findMyIP;
 exports.timeStamp = timeStamp;
 exports.addTelemetryRow = addTelemetryRow;
