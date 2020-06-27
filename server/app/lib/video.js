@@ -100,27 +100,34 @@ function reduce(val, base) {
     return val - parseInt(val / base) * base;
 }
 
+
 function drawCompass(im, videoWidth, videoHeight, heading) {
-    var minI = 0; //videoWidth / 5,
-    maxI = 360; //(4 / 5) * videoWidth,
-    compassRange = maxI - minI;
+    var hudColor = JSON.parse(server.nconf.get('video:hudColor'));
+    var minI = 0;//videoWidth / 5,
+        maxI = 360;//(4 / 5) * videoWidth,
+        compassRange = maxI-minI;
+    var onScreenColor = JSON.parse(server.nconf.get('video:onScreenColor'));
+    var fontSize = videoWidth * JSON.parse(server.nconf.get('video:fontBaseSize')) / 320;
     var compassRange = maxI - minI;
-    for (i = minI; i < maxI; i++) {
-        if (i % 20 == 0)
-        //im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, -screenMargin), new cv.Point(reduce(i + heading, compassRange) + minI, screenMargin + 10), new cv.Vec(hudColorR,hudColorG,hudColorB));
-        im.drawLine(new cv.Point(10, 10), new cv.Point(10,  10), new cv.Vec(hudColorR,hudColorG,hudColorB));
-        if (i % 10 == 0)
-            im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, Number(-screenMargin)), new cv.Point(reduce(i + heading, compassRange) + minI, Number(screenMargin) + 5), new cv.Vec(hudColorR,hudColorG,hudColorB));
-        if (i == map(0, 0, 360, minI, maxI))
-          im.putText("N", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, Number(screenMargin)), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(hudColorR,hudColorG,hudColorB));
-        //  im.putText("N", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
-        if (i == map(270, 0, 360, minI, maxI))
-            im.putText("E", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, Number(screenMargin)), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
-        if (i == map(180, 0, 360, minI, maxI))
-            im.putText("S", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, Number(screenMargin)), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
-        if (i == map(90, 0, 360, minI, maxI))
-            im.putText("W", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, Number(screenMargin)), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+
+    for (i = minI; i <  maxI; i++) {
+
+                  if (i%20==0)
+        im.line([reduce(i+heading,compassRange)+minI, - screenMargin], [reduce(i+heading,compassRange)+minI, + screenMargin + 10], hudColor);
+                  if (i%10==0)
+        im.line([reduce(i+heading,compassRange)+minI, - screenMargin], [reduce(i+heading,compassRange)+minI, + screenMargin + 5], hudColor);
+
+
+        if (i == map(0,0,360,minI, maxI))
+            im.putText("N", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), "CV_FONT_HERSHEY_SIMPLEX", 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+        if (i == map(270,0,360,minI, maxI))
+            im.putText("E", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), "CV_FONT_HERSHEY_SIMPLEX", 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+        if (i == map(180,0,360,minI, maxI))
+            im.putText("S", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), "CV_FONT_HERSHEY_SIMPLEX", 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+        if (i == map(90,0,360,minI, maxI))
+            im.putText("W", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), "CV_FONT_HERSHEY_SIMPLEX", 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
         drawHeading(im, videoWidth, videoHeight, heading);
+
     }
 }
 
