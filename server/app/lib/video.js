@@ -112,13 +112,13 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
         if (i % 10 == 0)
             im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, -screenMargin), new cv.Point(reduce(i + heading, compassRange) + minI, screenMargin + 5), new cv.Vec(hudColorR,hudColorG,hudColorB));
         if (i == map(0, 0, 360, minI, maxI))
-            im.putText("N", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+            im.putText("N", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
         if (i == map(270, 0, 360, minI, maxI))
-            im.putText("E", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+            im.putText("E", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
         if (i == map(180, 0, 360, minI, maxI))
-            im.putText("S", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+            im.putText("S", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
         if (i == map(90, 0, 360, minI, maxI))
-            im.putText("W", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+            im.putText("W", new cv.Point(reduce(i + heading + videoWidth / 2, compassRange) + minI), new cv.Point(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
         drawHeading(im, videoWidth, videoHeight, heading);
     }
 }
