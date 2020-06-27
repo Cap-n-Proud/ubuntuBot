@@ -1,8 +1,3 @@
-const cv = require('opencv4nodejs');
-var server = require('../server');
-
-//var exec = require('child_process').exec;
-
 var nconf = require('nconf');
 nconf.argv()
     .env()
@@ -10,13 +5,18 @@ nconf.argv()
         file: __dirname + '/config.json'
     });
 
-// const FPS = nconf.get('video:FPS');
-// const screenMargin = nconf.get('video:screenMargin');
-// const videoSource = nconf.get('video:videoSource');
-// const hudColor = nconf.get('video:hudColor');
-// const onScreenColor = nconf.get('video:onScreenColor');
-// const videoWidth = nconf.get('video:videoWidth');
-// const fontSize = videoWidth * nconf.get('video:fontBaseSize') / 320;
+const cv = require('opencv4nodejs');
+var server = require('../server');
+
+//var exec = require('child_process').exec;
+
+const FPS = nconf.get('video:FPS');
+var screenMargin = nconf.get('video:screenMargin');
+const videoSource = nconf.get('video:videoSource');
+const hudColor = nconf.get('video:hudColor');
+const onScreenColor = nconf.get('video:onScreenColor');
+const videoWidth = nconf.get('video:videoWidth');
+const fontSize = videoWidth * nconf.get('video:fontBaseSize') / 320;
 
 var frame = 0;
 var e = 0;
