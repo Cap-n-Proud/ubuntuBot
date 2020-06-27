@@ -25,6 +25,7 @@ const fontSize = videoWidth * nconf.get('video:fontBaseSize') / 320;
 var frame = 0;
 var e = 0;
 var heading = 0;
+var fontFace = 1;
 
 // initialize camera
 /*
@@ -106,7 +107,6 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
         maxI = 360;//(4 / 5) * videoWidth,
         compassRange = maxI-minI;
     var compassRange = maxI - minI;
-    var fontFace = 1;
     for (i = minI; i <  maxI; i++) {
 
                   if (i%20==0)
