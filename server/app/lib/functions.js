@@ -101,7 +101,7 @@ function CPUInfo() {
     //console.log(temperature, usage)
 }, 3 * 1000);
 
-//return serverADDR;
+return temparature;
 }
 
 // exports ======================================================================
