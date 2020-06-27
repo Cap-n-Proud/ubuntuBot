@@ -105,8 +105,6 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
     var minI = 0;//videoWidth / 5,
         maxI = 360;//(4 / 5) * videoWidth,
         compassRange = maxI-minI;
-    var onScreenColor = JSON.parse(server.nconf.get('video:onScreenColor'));
-    var fontSize = videoWidth * JSON.parse(server.nconf.get('video:fontBaseSize')) / 320;
     var compassRange = maxI - minI;
 
     for (i = minI; i <  maxI; i++) {
