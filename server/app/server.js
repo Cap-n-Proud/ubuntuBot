@@ -126,7 +126,7 @@ io.on('connection', function(socket) {
   }, 250);
 */
 
-    cPUInfo();
+    //cPUInfo();
 
     socket.on('Video', function(Video) {
         socket.emit('CMD', Video);
