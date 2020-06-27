@@ -49,13 +49,14 @@ var videoWidth = nconf.get('video:videoWidth');
 var videoHeight = nconf.get('video:videoHeight');
 var fps = nconf.get('video:fps');
 
+
+console.log('test: ' + videoWidth);
 // include custom functions ======================================================================
 //var systemModules = require(installPath + 'server/app/lib/systemModules');
 var functions = require(installPath + 'server/app/lib/functions');
 var camera = require(installPath + 'server/app/lib/camera');
 var videoFeed = require(installPath + 'server/app/lib/video');
 
-console.log('test: ' + videoWidth);
 
 //var robot = require(installPath + 'server/app/robot');
 
