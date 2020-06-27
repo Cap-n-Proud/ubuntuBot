@@ -50,7 +50,6 @@ var videoHeight = nconf.get('video:videoHeight');
 var fps = nconf.get('video:fps');
 
 
-console.log('test: ' + videoWidth);
 // include custom functions ======================================================================
 //var systemModules = require(installPath + 'server/app/lib/systemModules');
 var functions = require(installPath + 'server/app/lib/functions');

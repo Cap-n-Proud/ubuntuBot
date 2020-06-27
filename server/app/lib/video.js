@@ -2,9 +2,9 @@ var nconf = require('nconf');
 nconf.argv()
     .env()
     .file({
-        file: '/home/pi/ubuntuBot/server/config.json'
+        file: '/home/pi/ubuntuBot/server/app/config.json'
     });
-console.log(__dirname);
+
 const cv = require('opencv4nodejs');
 var server = require('../server');
 
