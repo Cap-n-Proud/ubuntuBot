@@ -10,13 +10,13 @@ nconf.argv()
         file: __dirname + '/config.json'
     });
 
-const FPS = nconf.get('video:FPS');
-const screenMargin = nconf.get('video:screenMargin');
-const videoSource = nconf.get('video:videoSource');
-const hudColor = nconf.get('video:hudColor');
-const onScreenColor = nconf.get('video:onScreenColor');
-const videoWidth = nconf.get('video:videoWidth');
-const fontSize = videoWidth * nconf.get('video:fontBaseSize') / 320;
+// const FPS = nconf.get('video:FPS');
+// const screenMargin = nconf.get('video:screenMargin');
+// const videoSource = nconf.get('video:videoSource');
+// const hudColor = nconf.get('video:hudColor');
+// const onScreenColor = nconf.get('video:onScreenColor');
+// const videoWidth = nconf.get('video:videoWidth');
+// const fontSize = videoWidth * nconf.get('video:fontBaseSize') / 320;
 
 var frame = 0;
 var e = 0;
