@@ -144,7 +144,7 @@ function drawOverlayInfo(im, videoWidth, videoHeight, memory, fps) {
     const leftCol = 0.01 * videoWidth,
         rightCol = 0.75 * videoWidth;
 
-    im.putText(videoWidth + "x" + videoHeight, new cv.Point(leftCol, videoHeight - 0 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+    im.putText(videoWidth + "x" + videoHeight, new cv.Point(leftCol, videoHeight - 0 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
     // im.putText("f:" + frame, leftCol, videoHeight - 1 * lineSpace - screenMargin, fontFace, onScreenColor, fontSize);
     im.putText("fps: " + parseInt(fps), new cv.Point(leftCol, videoHeight - 1 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
     im.putText("y: " + server.Telemetry['yaw'], new cv.Point(rightCol, videoHeight - 3 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
