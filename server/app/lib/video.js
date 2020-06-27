@@ -108,7 +108,6 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
     for (i = minI; i < maxI; i++) {
         if (i % 20 == 0)
         //im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, -screenMargin), new cv.Point(reduce(i + heading, compassRange) + minI, screenMargin + 10), new cv.Vec(hudColorR,hudColorG,hudColorB));
-        console.log(Number('HUD: ' + hudColor));
         im.drawLine(new cv.Point(10, 10), new cv.Point(10,  10), new cv.Vec(hudColorR,hudColorG,hudColorB));
         if (i % 10 == 0)
             im.drawLine(new cv.Point(reduce(i + heading, compassRange) + minI, -screenMargin), new cv.Point(reduce(i + heading, compassRange) + minI, screenMargin + 5), new cv.Vec(hudColorR,hudColorG,hudColorB));
