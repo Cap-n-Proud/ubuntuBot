@@ -14,9 +14,9 @@ const FPS = nconf.get('video:FPS');
 const screenMargin = nconf.get('video:screenMargin');
 const videoSource = nconf.get('video:videoSource');
 const hudColor = nconf.get('video:hudColor');
-const onScreenColor = JSON.parse(server.nconf.get('video:onScreenColor'));
-const videoWidth = JSON.parse(server.nconf.get('video:videoWidth'));
-const fontSize = videoWidth * JSON.parse(server.nconf.get('video:fontBaseSize')) / 320;
+const onScreenColor = nconf.get('video:onScreenColor');
+const videoWidth = nconf.get('video:videoWidth');
+const fontSize = videoWidth * nconf.get('video:fontBaseSize') / 320;
 
 var frame = 0;
 var e = 0;
