@@ -27,7 +27,7 @@ var heading = 0;
   function puts(error, stdout, stderr) { sys.puts(stdout) }
     exec('sudo modprobe bcm2835-v4l2', puts);
 */
-
+console.log(videoSource);
 const videoCap = new cv.VideoCapture(videoSource);
 
 function startVideoFeed(socket, videoWidth, videoHeight, fps) {
