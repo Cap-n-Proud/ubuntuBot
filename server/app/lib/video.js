@@ -102,7 +102,6 @@ function reduce(val, base) {
 
 
 function drawCompass(im, videoWidth, videoHeight, heading) {
-    var hudColor = JSON.parse(server.nconf.get('video:hudColor'));
     var minI = 0;//videoWidth / 5,
         maxI = 360;//(4 / 5) * videoWidth,
         compassRange = maxI-minI;
