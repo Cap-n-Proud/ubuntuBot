@@ -55,7 +55,7 @@ var functions = require(installPath + 'server/app/lib/functions');
 var camera = require(installPath + 'server/app/lib/camera');
 var videoFeed = require(installPath + 'server/app/lib/video');
 
-console.log(videoWidth, videoFeedPort);
+console.log('test: ' + videoWidth);
 
 //var robot = require(installPath + 'server/app/robot');
 
