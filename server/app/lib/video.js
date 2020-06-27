@@ -83,10 +83,10 @@ function startVideoFeed(socket, videoWidth, videoHeight, fps) {
 };
 
 function drawCrosshair(im, videoWidth, videoHeight) {
-    im.drawLine(new Point2(videoWidth / 2 - 20, videoHeight / 2), new Point2(videoWidth / 2 - 40, videoHeight / 2), , new Vec(hudColor));
-    im.drawLine(new Point2(videoWidth / 2 + 20, videoHeight / 2), new Point2(videoWidth / 2 + 40, videoHeight / 2), , new Vec(hudColor));
-    im.drawLine(new Point2(videoWidth / 2, videoHeight / 2 - 20), new Point2(videoWidth / 2, videoHeight / 2 - 40), , new Vec(hudColor));
-    im.drawLine(new Point2(videoWidth / 2, videoHeight / 2 + 20), new Point2(videoWidth / 2, videoHeight / 2 + 40), , new Vec(hudColor));
+    im.drawLine(new Point2(videoWidth / 2 - 20, videoHeight / 2), new Point2(videoWidth / 2 - 40, videoHeight / 2), new Vec(hudColor));
+    im.drawLine(new Point2(videoWidth / 2 + 20, videoHeight / 2), new Point2(videoWidth / 2 + 40, videoHeight / 2), new Vec(hudColor));
+    im.drawLine(new Point2(videoWidth / 2, videoHeight / 2 - 20), new Point2(videoWidth / 2, videoHeight / 2 - 40), new Vec(hudColor));
+    im.drawLine(new Point2(videoWidth / 2, videoHeight / 2 + 20), new Point2(videoWidth / 2, videoHeight / 2 + 40), new Vec(hudColor));
 }
 
 function map(x, in_min, in_max, out_min, out_max) {
@@ -104,17 +104,17 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
     var compassRange = maxI - minI;
     for (i = minI; i < maxI; i++) {
         if (i % 20 == 0)
-            im.drawLine(new Point2(reduce(i + heading, compassRange) + minI, -screenMargin), new Point2(reduce(i + heading, compassRange) + minI, +screenMargin + 10), , new Vec(hudColor));
+            im.drawLine(new Point2(reduce(i + heading, compassRange) + minI, -screenMargin), new Point2(reduce(i + heading, compassRange) + minI, +screenMargin + 10), new Vec(hudColor));
         if (i % 10 == 0)
-            im.drawLine(new Point2(reduce(i + heading, compassRange) + minI, -screenMargin), new Point2(reduce(i + heading, compassRange) + minI, +screenMargin + 5), , new Vec(hudColor));
+            im.drawLine(new Point2(reduce(i + heading, compassRange) + minI, -screenMargin), new Point2(reduce(i + heading, compassRange) + minI, +screenMargin + 5), new Vec(hudColor));
         if (i == map(0, 0, 360, minI, maxI))
-            im.putText("N", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new Vec(onScreenColor));
+            im.putText("N", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize), new Vec(onScreenColor));
         if (i == map(270, 0, 360, minI, maxI))
-            im.putText("E", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new Vec(onScreenColor));
+            im.putText("E", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize), new Vec(onScreenColor));
         if (i == map(180, 0, 360, minI, maxI))
-            im.putText("S", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new Vec(onScreenColor));
+            im.putText("S", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize), new Vec(onScreenColor));
         if (i == map(90, 0, 360, minI, maxI))
-            im.putText("W", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new Vec(onScreenColor));
+            im.putText("W", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize), new Vec(onScreenColor));
         drawHeading(im, videoWidth, videoHeight, heading);
     }
 }
