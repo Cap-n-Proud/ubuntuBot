@@ -108,13 +108,13 @@ function drawCompass(im, videoWidth, videoHeight, heading) {
         if (i % 10 == 0)
             im.drawLine(new Point2(reduce(i + heading, compassRange) + minI, -screenMargin), new Point2(reduce(i + heading, compassRange) + minI, +screenMargin + 5), new Vec(hudColor));
         if (i == map(0, 0, 360, minI, maxI))
-            im.putText("N", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize), new Vec(onScreenColor));
+            im.putText("N", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new Vec(onScreenColor));
         if (i == map(270, 0, 360, minI, maxI))
-            im.putText("E", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize), new Vec(onScreenColor));
+            im.putText("E", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new Vec(onScreenColor));
         if (i == map(180, 0, 360, minI, maxI))
-            im.putText("S", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize), new Vec(onScreenColor));
+            im.putText("S", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new Vec(onScreenColor));
         if (i == map(90, 0, 360, minI, maxI))
-            im.putText("W", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize), new Vec(onScreenColor));
+            im.putText("W", new Point2(reduce(i + heading + videoWidth / 2, compassRange) + minI), new Point2(25, screenMargin), "CV_FONT_HERSHEY_SIMPLEX",  0.7 * fontSize, new Vec(onScreenColor));
         drawHeading(im, videoWidth, videoHeight, heading);
     }
 }
