@@ -136,7 +136,7 @@ function drawHeading(im, videoWidth, videoHeight, heading) {
     im.drawLine(new cv.Point(videoWidth / 2 + lenght / 2, +45), new cv.Point(videoWidth / 2 + lenght / 2, +45 - height), new cv.Vec(hudColorR,hudColorG,hudColorB));
     im.drawLine(new cv.Point(videoWidth / 2 - lenght / 2, +45 - height), new cv.Point(videoWidth / 2, +45 - height - 8), new cv.Vec(hudColorR,hudColorG,hudColorB));
     im.drawLine(new cv.Point(videoWidth / 2 + lenght / 2, +45 - height), new cv.Point(videoWidth / 2, +45 - height - 8), new cv.Vec(hudColorR,hudColorG,hudColorB));
-    im.putText(heading, new cv.Point(videoWidth / 2 - lenght / 2 + 2 * screenMargin), new cv.Point(45 - screenMargin), "CV_FONT_HERSHEY_SIMPLEX", fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+    im.putText(heading, new cv.Point(videoWidth / 2 - lenght / 2 + 2 * screenMargin, 45 - screenMargin), fontFace, 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
 }
 
 function drawOverlayInfo(im, videoWidth, videoHeight, memory, fps) {
