@@ -146,12 +146,12 @@ function drawOverlayInfo(im, videoWidth, videoHeight, memory, fps) {
 
     im.putText(videoWidth + "x" + videoHeight, new cv.Point(leftCol, videoHeight - 0 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
     // im.putText("f:" + frame, leftCol, videoHeight - 1 * lineSpace - screenMargin, fontFace, onScreenColor, fontSize);
-    im.putText("fps: " + parseInt(fps), new cv.Point(leftCol, videoHeight - 1 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
-    im.putText("y: " + server.Telemetry['yaw'], new cv.Point(rightCol, videoHeight - 3 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
-    im.putText("r: " + server.Telemetry['roll'], new cv.Point(rightCol, videoHeight - 2 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
-    im.putText("p: " + server.Telemetry['pitch'], new cv.Point(rightCol, videoHeight - 4 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
-    im.putText("t: " + server.temperature, new cv.Point(rightCol, videoHeight - 1 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
-    im.putText("m: " + parseInt(memory), new cv.Point(rightCol, videoHeight - 0 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(Number(onScreenColorR, onScreenColorG, onScreenColorB)));
+    im.putText("fps: " + parseInt(fps), new cv.Point(leftCol, videoHeight - 1 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+    im.putText("y: " + server.Telemetry['yaw'], new cv.Point(rightCol, videoHeight - 3 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+    im.putText("r: " + server.Telemetry['roll'], new cv.Point(rightCol, videoHeight - 2 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+    im.putText("p: " + server.Telemetry['pitch'], new cv.Point(rightCol, videoHeight - 4 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+    im.putText("t: " + server.temperature, new cv.Point(rightCol, videoHeight - 1 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+    im.putText("m: " + parseInt(memory), new cv.Point(rightCol, videoHeight - 0 * lineSpace - screenMargin), fontFace, fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
     //im.putText("t: " + server.nconf.get('server:version'), 0.8 * videoWidth, 0.3 * videoHeight - 3 * lineSpace, fontFace, server.nconf.get('video:onScreenColor'), 0.5);
     // im.putText(" x " + videoHeight, 0.01 * videoWidth + 10, 0.9 * videoHeight, fontFace, onScreenColor, fontSize);
 }
