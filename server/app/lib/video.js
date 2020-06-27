@@ -65,10 +65,10 @@ function startVideoFeed(socket, videoWidth, videoHeight, fps) {
         //	if (err) throw err;
         frame++;
         im = videoCap.read();
-        const outBase64 =  cv.imencode('.jpg', im).toString('base64'); // Perform base64 encoding
         if (server.nconf.get('video:drawCompass')) drawCompass(im, videoWidth, videoHeight, server.Telemetry['yaw']);
         if (server.nconf.get('video:drawCrosshair')) drawCrosshair(im, videoWidth, videoHeight);
         if (server.nconf.get('video:drawOverlayInfo')) drawOverlayInfo(im, videoWidth, videoHeight, rss, fps);
+        const outBase64 =  cv.imencode('.jpg', im).toString('base64'); // Perform base64 encoding
         if (im.rows > 0 && im.cols > 0) {
             socket.emit('frame', {
                 buffer: outBase64
