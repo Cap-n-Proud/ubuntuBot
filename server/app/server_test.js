@@ -179,11 +179,11 @@ io.on('disconnect', function() {
 
 http.listen(serverPort, function() {
     console.log(robotName + ' listening on *: ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
-    log.info(robotName + ' listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
+    //log.info(robotName + ' listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
 
 
     //Read input from Arduino and stores it into a dictionary
-  
+
 
 });
 
