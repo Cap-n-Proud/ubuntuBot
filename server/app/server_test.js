@@ -117,14 +117,14 @@ io.on('connection', function(socket) {
     var myDate = new Date();
     var startMessage = 'Connected ' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds() + ' v' + version + ' @' + serverADDR;
     //Init the heades for telemtry data
-  //  serialPort.write('READ RemoteInit\n\r');
+    //serialPort.write('READ RemoteInit\n\r');
     //Trasmit system and PID parameters
 
     //socket.emit('serverADDR', serverADDR);
     socket.emit('connected', startMessage, serverADDR, serverPort, videoFeedPort, PID);
     console.log('New socket.io connection - id: %s', socket.id);
 
-  //  log.info('Client connected ' + socket.id, startMessage, serverADDR, serverPort, videoFeedPort, PID + ' video: ' + videoWidth, videoHeight, fps);
+    log.info('Client connected ' + socket.id, startMessage, serverADDR, serverPort, videoFeedPort, PID + ' video: ' + videoWidth, videoHeight, fps);
 
     // setTimeout(function() {
     //     videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps);
@@ -150,6 +150,8 @@ io.on('connection', function(socket) {
         exec('sudo bash ' + installPath + 'server/app/bin/' + Video, puts);
 
     });
+
+    //Set commands SCMD are commands to control arduino. They go to Arduino directly.
 
 
 
@@ -180,7 +182,8 @@ http.listen(serverPort, function() {
     log.info(robotName + ' listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
 
 
-
+    //Read input from Arduino and stores it into a dictionary
+  
 
 });
 
