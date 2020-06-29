@@ -121,10 +121,10 @@ io.on('connection', function(socket) {
     //Trasmit system and PID parameters
 
     //socket.emit('serverADDR', serverADDR);
-    socket.emit('connected', startMessage, serverADDR, serverPort, videoFeedPort, PID);
+    //socket.emit('connected', startMessage, serverADDR, serverPort, videoFeedPort, PID);
     console.log('New socket.io connection - id: %s', socket.id);
 
-    log.info('Client connected ' + socket.id, startMessage, serverADDR, serverPort, videoFeedPort, PID + ' video: ' + videoWidth, videoHeight, fps);
+    //log.info('Client connected ' + socket.id, startMessage, serverADDR, serverPort, videoFeedPort, PID + ' video: ' + videoWidth, videoHeight, fps);
 
     // setTimeout(function() {
     //     videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps);
@@ -141,15 +141,7 @@ io.on('connection', function(socket) {
 
     //cPUInfo();
 
-    socket.on('Video', function(Video) {
-        socket.emit('CMD', Video);
-
-        function puts(error, stdout, stderr) {
-            sys.puts(stdout)
-        }
-        exec('sudo bash ' + installPath + 'server/app/bin/' + Video, puts);
-
-    });
+  
 
     //Set commands SCMD are commands to control arduino. They go to Arduino directly.
 
