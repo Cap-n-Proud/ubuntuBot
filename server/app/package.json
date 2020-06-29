@@ -2,7 +2,6 @@
   "name": "ubuntu",
   "version": "2.5.1",
   "description": "Node application to control robots",
-  "main": "server.js",
   "dependencies": {
     "bunyan": "x.x.x",
     "events": "^3.1.0",
