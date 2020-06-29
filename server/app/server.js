@@ -96,7 +96,12 @@ sPort.on('open', function() {
 })
 
 //serialPort.on('data', console.log)
-
+// var os = require( 'os' );
+//
+// var networkInterfaces = os.networkInterfaces( );
+//
+// console.log( networkInterfaces );
+var serverADDR = findMyIP();
 eventEmitter.on('CMDecho', function(data) {
     socket.emit('CMD', data);
 });
