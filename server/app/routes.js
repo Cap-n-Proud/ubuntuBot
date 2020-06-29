@@ -1,8 +1,16 @@
 
 // Routers
 // expose the routes to our app with module.exports
-var server = require('./server_test');
+//var server = require('./server_test');
+var nconf = require('nconf');
+nconf.argv()
+    .env()
+    .file({
+        file: __dirname + '/config.json'
+    });
+
 var installPath = "";//server.nconf.get('server:installPath');
+
 module.exports = function(app) {
 
 var path = require('path');
