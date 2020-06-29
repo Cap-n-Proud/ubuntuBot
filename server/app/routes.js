@@ -1,19 +1,12 @@
 
 // Routers
 // expose the routes to our app with module.exports
-var server = require('./server');
+//var server = require('./server');
 var installPath = "";//server.nconf.get('server:installPath');
 module.exports = function(app) {
 
-var path = require('path'); 
+var path = require('path');
 
-    //app.use(express.static(__dirname + '/wwwroot'));
-    // Routers
-  
-
-//
-//app.use(express.static('/home/pi/Bailey/server/wwwroot/'));
-// Routers
 {
 app.get('/', function(req, res){
   res.sendFile(server.nconf.get('server:installPath') + 'server/wwwroot/index.html');
@@ -63,11 +56,11 @@ app.get('/vj', function(req, res) {
 });
 
 app.get('/REBOOT', function(req, res) {
-  var postData = req.url;  
+  var postData = req.url;
   function puts(error, stdout, stderr) { sys.puts(stdout) }
   exec('sudo reboot now');
   sockets.emit('Info', "Rebooting")
-  //console.log(postData);  
+  //console.log(postData);
   res.end;
 });
 
