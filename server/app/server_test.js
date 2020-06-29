@@ -103,48 +103,13 @@ sPort.on('open', function() {
 // var networkInterfaces = os.networkInterfaces( );
 //
 // console.log( networkInterfaces );
-eventEmitter.on('CMDecho', function(data) {
-    socket.emit('CMD', data);
-});
-
-eventEmitter.on('serialData', function(data) {
-    socket.emit('serialData', data);
-});
 
 io.on('connection', function(socket) {
     //socket.emit('connected', version, Telemetry);
 
     var myDate = new Date();
     var startMessage = 'Connected ' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds() + ' v' + version + ' @' + serverADDR;
-    //Init the heades for telemtry data
-    //serialPort.write('READ RemoteInit\n\r');
-    //Trasmit system and PID parameters
-
-    //socket.emit('serverADDR', serverADDR);
-    //socket.emit('connected', startMessage, serverADDR, serverPort, videoFeedPort, PID);
     console.log('New socket.io connection - id: %s', socket.id);
-
-    //log.info('Client connected ' + socket.id, startMessage, serverADDR, serverPort, videoFeedPort, PID + ' video: ' + videoWidth, videoHeight, fps);
-
-    // setTimeout(function() {
-    //     videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps);
-    // }, 2000);
-
-
-    /* Not needed as the info is displayed on screen
-   setInterval(function(){
-  if(THReceived==1)socket.emit('status', Telemetry['yaw'], Telemetry['pitch'], Telemetry['roll'], Telemetry['bal'], Telemetry['dISTE']);
-  if(Telemetry['pitch'] > 60)log.error('BALANCING FAIL! Pitch: ' + Telemetry['pitch']);
-              //console.log(Telemetry['pitch']);
-  }, 250);
-*/
-
-    //cPUInfo();
-
-  
-
-    //Set commands SCMD are commands to control arduino. They go to Arduino directly.
-
 
 
     socket.on('disconnect', function() {
@@ -153,7 +118,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('connected', function() {
-        //console.log('CONNECTED id: %s', socket.id);
+        console.log('CONNECTED id: %s', socket.id);
         // log.info('Client disconnected ' + socket.id);sudo modprobe bcm2835-v4l2
     });
 
@@ -170,7 +135,7 @@ io.on('disconnect', function() {
 });
 
 http.listen(serverPort, function() {
-    console.log(robotName + ' listening on *: ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
+    console.log(robotName + ' listening on: ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
     //log.info(robotName + ' listening on ' + serverADDR + ':' + serverPort + ' video feed: ' + videoFeedPort);
 
 
@@ -179,7 +144,7 @@ http.listen(serverPort, function() {
 
 });
 
-
-module.exports.Telemetry = Telemetry;
-module.exports.temperature = temperature;
-module.exports.nconf = nconf;
+//
+// module.exports.Telemetry = Telemetry;
+// module.exports.temperature = temperature;
+// module.exports.nconf = nconf;
