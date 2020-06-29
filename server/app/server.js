@@ -97,6 +97,13 @@ sPort.on('open', function() {
 
 //serialPort.on('data', console.log)
 
+eventEmitter.on('CMDecho', function(data) {
+    socket.emit('CMD', data);
+});
+
+eventEmitter.on('serialData', function(data) {
+    socket.emit('serialData', data);
+});
 
 io.on('connection', function(socket) {
     //socket.emit('connected', version, Telemetry);
@@ -113,9 +120,9 @@ io.on('connection', function(socket) {
 
     log.info('Client connected ' + socket.id, startMessage, serverADDR, serverPort, videoFeedPort, PID + ' video: ' + videoWidth, videoHeight, fps);
 
-    setTimeout(function() {
-        videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps);
-    }, 2000);
+    // setTimeout(function() {
+    //     videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps);
+    // }, 2000);
 
 
     /* Not needed as the info is displayed on screen
@@ -149,7 +156,7 @@ io.on('connection', function(socket) {
 
     });
 
-    //Server Commands control the behaviour of teh server
+    //Server Commands control the behaviour of the server
     socket.on('SerCMD', function(CMD) {
         socket.emit('CMD', CMD);
         if (CMD == "LOG_ON" && !LogR) {
@@ -203,13 +210,7 @@ io.on('connection', function(socket) {
     });
 
 
-    eventEmitter.on('CMDecho', function(data) {
-        socket.emit('CMD', data);
-    });
 
-    eventEmitter.on('serialData', function(data) {
-        socket.emit('serialData', data);
-    });
 
 });
 
