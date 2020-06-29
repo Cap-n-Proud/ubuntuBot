@@ -64,7 +64,9 @@ require('./routes')(app);
 
 app.use(express.static(installPath + 'server/wwwroot'));
 
-var serverADDR = 'N/A';
+//var serverADDR = 'N/A';
+var serverADDR = functions.findMyIP();
+
 var LogR = 0;
 var TelemetryFN = 'N/A';
 var prevTel = "";
@@ -101,7 +103,6 @@ sPort.on('open', function() {
 // var networkInterfaces = os.networkInterfaces( );
 //
 // console.log( networkInterfaces );
-var serverADDR = findMyIP();
 eventEmitter.on('CMDecho', function(data) {
     socket.emit('CMD', data);
 });
@@ -165,10 +166,10 @@ io.on('connection', function(socket) {
     socket.on('SerCMD', function(CMD) {
         socket.emit('CMD', CMD);
         if (CMD == "LOG_ON" && !LogR) {
-            TelemetryFN = 'Telemetry_' + systemModules.timeStamp() + '.csv';
+            TelemetryFN = 'Telemetry_' + functions.timeStamp() + '.csv';
             socket.emit('Info', telemetryfilePath + TelemetryFN)
             log.debug('Telemetry logging started ' + telemetryfilePath + TelemetryFN);
-            systemModules.setTelemetryFile(telemetryfilePath, TelemetryFN, TelemetryHeader, PIDHeader, SEPARATOR);
+            functions.setTelemetryFile(telemetryfilePath, TelemetryFN, TelemetryHeader, PIDHeader, SEPARATOR);
             LogR = 1;
 
         } else if (CMD == "LOG_OFF") {
@@ -269,7 +270,7 @@ http.listen(serverPort, function() {
             //eventEmitter.emit('log', data);
 
             if (LogR == 1) {
-                systemModules.addTelemetryRow(telemetryfilePath, TelemetryFN, TelemetryHeader, data, PIDHeader, PIDVal, SEPARATOR)
+                functions.addTelemetryRow(telemetryfilePath, TelemetryFN, TelemetryHeader, data, PIDHeader, PIDVal, SEPARATOR)
             }
         }
 
