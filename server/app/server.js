@@ -153,7 +153,7 @@ io.on('connection', function(socket) {
 
     socket.on('move', function(dX, dY) {
         serialPort.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
-
+        console.log('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY));
     });
 
     //Server Commands control the behaviour of the server
