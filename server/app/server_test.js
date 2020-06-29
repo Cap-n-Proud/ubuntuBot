@@ -7,6 +7,9 @@ var io = require('socket.io')(http);
 //var systemModules = require(installPath + 'server/app/lib/systemModules');
 var functions = require(__dirname + '/lib/functions');
 const serverPort = 54321
+const robotName ="testserver"
+const videoFeedPort ="N/A"
+
 var serverADDR = functions.findMyIP();
 
 
