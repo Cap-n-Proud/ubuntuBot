@@ -9,7 +9,7 @@ var functions = require(__dirname + '/lib/functions');
 const serverPort = 54321
 const robotName ="testserver"
 const videoFeedPort ="N/A"
-cosnt version ="0.1"
+const version ="0.1"
 var serverADDR = functions.findMyIP();
 
 
