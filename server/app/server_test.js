@@ -5,7 +5,7 @@ var io = require('socket.io')(http);
 
 // include custom functions ======================================================================
 //var systemModules = require(installPath + 'server/app/lib/systemModules');
-var functions = require(installPath + 'server/app/lib/functions');
+var functions = require(__dirname + 'server/app/lib/functions');
 
 var serverADDR = functions.findMyIP();
 
